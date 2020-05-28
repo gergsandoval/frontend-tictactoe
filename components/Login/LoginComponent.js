@@ -1,14 +1,30 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { AsyncStorage, StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
+import { signInAsync, getCachedAuthAsync } from "./GoogleAuth";
 
-const LoginComponent = () => (
-  <View style={styles.ButtonContainer}>
-    <LoginButton />
-    <ExitButton />
-  </View>
-);
+const LoginComponent = ({ navigation }) => {
+  let [authState, setAuthState] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let cachedAuth = await getCachedAuthAsync();
+      if (cachedAuth && !authState) {
+        setAuthState(cachedAuth);
+        navigation.navigate("Lobby");
+      }
+    })();
+  }, []);
+
+  return (
+    <View style={styles.ButtonContainer}>
+      <LoginButton signIn={() => signInAsync(navigation)} />
+      <ExitButton />
+    </View>
+  );
+};
+
 export default LoginComponent;
 
 const styles = StyleSheet.create({

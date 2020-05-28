@@ -8,7 +8,7 @@ const LoginButton = (props) => (
       icon="login"
       mode="contained"
       style={styles.button}
-      onPress={() => console.log("Pressed")}
+      onPress={props.signIn}
     >
       Conectar con Google
     </Button>
