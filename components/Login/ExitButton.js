@@ -5,7 +5,7 @@ import { Button } from "react-native-paper";
 const ExitButton = (props) => (
   <View>
     <Button
-      icon="login"
+      icon="exit-run"
       mode="contained"
       style={styles.button}
       onPress={() => BackHandler.exitApp()}

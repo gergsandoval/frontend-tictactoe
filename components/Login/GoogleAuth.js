@@ -46,16 +46,3 @@ const refreshAuthAsync = async ({ refreshToken }) => {
   await cacheAuthAsync(authState);
   return authState;
 };
-
-// export async function signOutAsync({ accessToken }) {
-//   try {
-//     await AppAuth.revokeAsync(config, {
-//       token: accessToken,
-//       isClientIdProvided: true,
-//     });
-//     await AsyncStorage.removeItem(StorageKey);
-//     return null;
-//   } catch (e) {
-//     alert(`Failed to revoke token: ${e.message}`);
-//   }
-// }
