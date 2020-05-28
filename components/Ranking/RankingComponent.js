@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const RankingComponent = (props) => (
+const RankingComponent = () => (
   <View style={styles.container}>
     <Text>RankingComponent</Text>
   </View>

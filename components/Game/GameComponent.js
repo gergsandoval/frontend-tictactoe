@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const GameComponent = (props) => (
+const GameComponent = () => (
   <View style={styles.container}>
     <Text>GameComponent</Text>
   </View>

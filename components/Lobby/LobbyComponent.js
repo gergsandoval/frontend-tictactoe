@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const LobbyComponent = (props) => (
+const LobbyComponent = () => (
   <View style={styles.container}>
     <Text>LobbyComponent</Text>
   </View>

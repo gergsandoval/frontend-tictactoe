@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer, TabActions } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import LoginComponent from "./Login/LoginComponent";
+import LobbyComponent from "./Lobby/LobbyComponent";
+import GameComponent from "./Game/GameComponent";
+import RankingComponent from "./Ranking/RankingComponent";
 import Constants from "expo-constants";
 
 const Stack = createStackNavigator();
 
 const TicTacToeApp = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen name="Login" component={Login}></Stack.Screen>
-      <Stack.Screen name="Lobby" component={Lobby}></Stack.Screen>
-      <Stack.Screen name="Game" component={Game}></Stack.Screen>
-      <Stack.Screen name="Ranking" component={Ranking}></Stack.Screen>
+    <Stack.Navigator initialRouteName="LoginComponent">
+      <Stack.Screen name="Login" component={LoginComponent}></Stack.Screen>
+      <Stack.Screen name="Lobby" component={LobbyComponent}></Stack.Screen>
+      <Stack.Screen name="Game" component={GameComponent}></Stack.Screen>
+      <Stack.Screen name="Ranking" component={RankingComponent}></Stack.Screen>
     </Stack.Navigator>
   </NavigationContainer>
 );
