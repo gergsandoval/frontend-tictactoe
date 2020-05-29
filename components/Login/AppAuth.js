@@ -52,3 +52,17 @@ export async function getUserInfo({accessToken}) {
     .then((data) => data);
     return userInfo;
 }
+
+export async function signOutAsync() {
+  const {accessToken} = await AsyncStorage.getItem(GoogleToken);
+  try {
+    await AppAuth.revokeAsync(config, {
+      token: accessToken,
+      isClientIdProvided: true,
+    });
+    await AsyncStorage.removeItem(GoogleToken);
+    return null;
+  } catch (e) {
+    alert(`Failed to revoke token: ${e.message}`);
+  }
+}
