@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import FirstRank from "./firstRank";
 
-const LobbyComponent = ({ route, navigation }) => {
+const LobbyComponent = ({ navigation }) => {
   return (
     <View>
       <FirstRank navigation={navigation} />
