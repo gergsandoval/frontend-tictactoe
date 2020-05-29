@@ -14,7 +14,11 @@ const TicTacToeApp = () => (
   <NavigationContainer>
     <Stack.Navigator initialRouteName="LoginComponent">
       <Stack.Screen name="Login" component={LoginComponent}></Stack.Screen>
-      <Stack.Screen name="Lobby" component={LobbyComponent}></Stack.Screen>
+      <Stack.Screen
+        name="Lobby"
+        component={LobbyComponent}
+        options={({ route }) => ({ title: route.params.title })}
+      ></Stack.Screen>
       <Stack.Screen name="Game" component={GameComponent}></Stack.Screen>
       <Stack.Screen name="Ranking" component={RankingComponent}></Stack.Screen>
     </Stack.Navigator>

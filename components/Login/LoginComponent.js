@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
-import { signInAsync, getCachedAuthAsync } from "./GoogleAuth";
+import { signInAsync, getCachedAuthAsync, getUserInfo } from "./AppAuth";
 
 const LoginComponent = ({ navigation }) => {
   let [authState, setAuthState] = useState(null);
@@ -11,15 +11,19 @@ const LoginComponent = ({ navigation }) => {
     (async () => {
       let cachedAuth = await getCachedAuthAsync();
       if (cachedAuth && !authState) {
+        const userInfo = await getUserInfo(cachedAuth);
+        navigation.navigate("Lobby", {
+          title: `Bienvenido ${userInfo.name}`,
+          userInfo: userInfo,
+        });
         setAuthState(cachedAuth);
-        navigation.navigate("Lobby");
       }
     })();
   }, []);
 
   return (
     <View style={styles.ButtonContainer}>
-      <LoginButton signIn={() => signInAsync(navigation)} />
+      <LoginButton signIn={() => signInAsync(navigation, setAuthState)} />
       <ExitButton />
     </View>
   );

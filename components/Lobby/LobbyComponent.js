@@ -1,11 +1,15 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import FirstRank from "./firstRank";
 
-const LobbyComponent = () => (
-  <View style={styles.container}>
-    <Text>LobbyComponent</Text>
-  </View>
-);
+const LobbyComponent = ({ route, navigation }) => {
+  return (
+    <View>
+      <FirstRank navigation={navigation} />
+    </View>
+  );
+};
+
 export default LobbyComponent;
 
 const styles = StyleSheet.create({

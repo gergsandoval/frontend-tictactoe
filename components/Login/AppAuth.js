@@ -8,20 +8,19 @@ const config = {
     "725377835616-jpcm8ei8a2q936jqk3980qk01el82gcu.apps.googleusercontent.com",
 };
 
-const StorageKey = "@MyApp:CustomGoogleOAuthKey";
+const GoogleToken = "GoogleToken";
 
-export async function signInAsync(navigation) {
-  let authState = await AppAuth.authAsync(config);
+export async function signInAsync(navigation, setAuthState) {
+  const authState = await AppAuth.authAsync(config);
   await cacheAuthAsync(authState);
-  console.log("signInAsync", authState);
-  navigation.navigate("Lobby");
-  return authState;
+  const userInfo = await getUserInfo(authState);
+  setAuthState(authState);
+  navigation.navigate("Lobby", { title: `Bienvenido ${userInfo.name}`, userInfo: userInfo,});
 }
 
 export async function getCachedAuthAsync() {
-  let value = await AsyncStorage.getItem(StorageKey);
+  let value = await AsyncStorage.getItem(GoogleToken);
   let authState = JSON.parse(value);
-  console.log("getCachedAuthAsync", authState);
   if (authState) {
     if (checkIfTokenExpired(authState)) {
       return refreshAuthAsync(authState);
@@ -32,17 +31,24 @@ export async function getCachedAuthAsync() {
   return null;
 }
 
-export default { signInAsync, getCachedAuthAsync };
 
-const cacheAuthAsync = async (authState) =>
-  await AsyncStorage.setItem(StorageKey, JSON.stringify(authState));
+const cacheAuthAsync = async authState =>
+  await AsyncStorage.setItem(GoogleToken, JSON.stringify(authState));
 
 const checkIfTokenExpired = ({ accessTokenExpirationDate }) =>
   new Date(accessTokenExpirationDate) < new Date();
 
 const refreshAuthAsync = async ({ refreshToken }) => {
   let authState = await AppAuth.refreshAsync(config, refreshToken);
-  console.log("refreshAuth", authState);
   await cacheAuthAsync(authState);
   return authState;
 };
+
+// prettier-ignore
+export async function getUserInfo({accessToken}) {
+  const userInfo = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  }).then((response) => response.json())
+    .then((data) => data);
+    return userInfo;
+}
