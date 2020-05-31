@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
+import GameComponent from "../Game/GameComponent";
 import { signInAsync, getCachedAuthAsync, getUserInfo } from "./AppAuth";
 
 const LoginComponent = ({ navigation }) => {
@@ -23,6 +24,7 @@ const LoginComponent = ({ navigation }) => {
 
   return (
     <View style={styles.ButtonContainer}>
+      <GameComponent></GameComponent>
       <LoginButton signIn={() => signInAsync(navigation, setAuthState)} />
       <ExitButton />
     </View>
