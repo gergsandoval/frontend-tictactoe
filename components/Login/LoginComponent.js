@@ -22,10 +22,20 @@ const LoginComponent = ({ navigation }) => {
     })();
   }, []);
 
+  googleConnect = async () => {
+    const authState = await signInAsync();
+    const userInfo = await getUserInfo(authState);
+    setAuthState(authState);
+    navigation.navigate("Lobby", {
+      title: `Bienvenido ${userInfo.name}`,
+      userInfo: userInfo,
+    });
+  };
+
   return (
     <View style={styles.ButtonContainer}>
-      <GameComponent></GameComponent>
-      <LoginButton signIn={() => signInAsync(navigation, setAuthState)} />
+      <GameComponent />
+      <LoginButton signIn={() => googleConnect()} />
       <ExitButton />
     </View>
   );

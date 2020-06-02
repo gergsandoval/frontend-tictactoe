@@ -10,12 +10,10 @@ const config = {
 
 const GoogleToken = "GoogleToken";
 
-export async function signInAsync(navigation, setAuthState) {
-  const authState = await AppAuth.authAsync(config);
+export async function signInAsync() {
+  let authState = await AppAuth.authAsync(config);
   await cacheAuthAsync(authState);
-  const userInfo = await getUserInfo(authState);
-  setAuthState(authState);
-  navigation.navigate("Lobby", { title: `Bienvenido ${userInfo.name}`, userInfo: userInfo,});
+  return authState;
 }
 
 export async function getCachedAuthAsync() {
@@ -31,7 +29,6 @@ export async function getCachedAuthAsync() {
   return null;
 }
 
-
 const cacheAuthAsync = async authState =>
   await AsyncStorage.setItem(GoogleToken, JSON.stringify(authState));
 
@@ -39,9 +36,12 @@ const checkIfTokenExpired = ({ accessTokenExpirationDate }) =>
   new Date(accessTokenExpirationDate) < new Date();
 
 const refreshAuthAsync = async ({ refreshToken }) => {
-  let authState = await AppAuth.refreshAsync(config, refreshToken);
-  await cacheAuthAsync(authState);
-  return authState;
+  if (refreshToken !== null){
+    let authState = await AppAuth.refreshAsync(config, refreshToken);
+    await cacheAuthAsync(authState);
+    return authState;
+  }
+  return null;
 };
 
 // prettier-ignore
