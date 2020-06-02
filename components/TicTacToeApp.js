@@ -17,9 +17,13 @@ const TicTacToeApp = () => (
       <Stack.Screen
         name="Lobby"
         component={LobbyComponent}
-        options={({ route }) => ({ title: route.params.title })}
+        // options={{ headerLeft: null }}
       ></Stack.Screen>
-      <Stack.Screen name="Game" component={GameComponent}></Stack.Screen>
+      <Stack.Screen
+        name="Game"
+        component={GameComponent}
+        //options={{ headerLeft: null }}
+      ></Stack.Screen>
       <Stack.Screen name="Ranking" component={RankingComponent}></Stack.Screen>
     </Stack.Navigator>
   </NavigationContainer>

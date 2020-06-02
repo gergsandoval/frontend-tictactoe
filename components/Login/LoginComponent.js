@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
-import GameComponent from "../Game/GameComponent";
 import { signInAsync, getCachedAuthAsync, getUserInfo } from "./AppAuth";
 
 const LoginComponent = ({ navigation }) => {
@@ -27,14 +26,12 @@ const LoginComponent = ({ navigation }) => {
     const userInfo = await getUserInfo(authState);
     setAuthState(authState);
     navigation.navigate("Lobby", {
-      title: `Bienvenido ${userInfo.name}`,
       userInfo: userInfo,
     });
   };
 
   return (
     <View style={styles.ButtonContainer}>
-      <GameComponent />
       <LoginButton signIn={() => googleConnect()} />
       <ExitButton />
     </View>

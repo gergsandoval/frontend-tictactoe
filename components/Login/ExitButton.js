@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, BackHandler } from "react-native";
 import { Button } from "react-native-paper";
 
-const ExitButton = props => (
+const ExitButton = () => (
   <View>
     <Button
       icon="exit-run"
