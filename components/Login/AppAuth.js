@@ -36,12 +36,12 @@ const checkIfTokenExpired = ({ accessTokenExpirationDate }) =>
   new Date(accessTokenExpirationDate) < new Date();
 
 const refreshAuthAsync = async ({ refreshToken }) => {
-  if (refreshToken !== null){
-    let authState = await AppAuth.refreshAsync(config, refreshToken);
-    await cacheAuthAsync(authState);
-    return authState;
+  const authState = await AppAuth.refreshAsync(config, refreshToken);
+  if (authState.refreshToken === null){
+    authState.refreshToken = refreshToken
   }
-  return null;
+  await cacheAuthAsync(authState);
+  return authState;
 };
 
 // prettier-ignore
