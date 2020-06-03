@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
 import { signInAsync, getCachedAuthAsync, getUserInfo } from "./AppAuth";
+import Constants from 'expo-constants';
 
 const LoginComponent = ({ navigation }) => {
   let [authState, setAuthState] = useState(null);
@@ -21,10 +22,16 @@ const LoginComponent = ({ navigation }) => {
     })();
   }, []);
 
-  googleConnect = async () => {
-    const authState = await signInAsync();
-    const userInfo = await getUserInfo(authState);
-    setAuthState(authState);
+  const googleConnect = async () => {
+    let userInfo
+    if(Constants.deviceName != "Chrome"){
+      const authState = await signInAsync();
+      userInfo = await getUserInfo(authState);
+      setAuthState(authState);
+    }else{
+      userInfo = "";
+    }
+    
     navigation.navigate("Lobby", {
       userInfo: userInfo,
     });

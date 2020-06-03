@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import io from "socket.io-client";
 import Board from "./Board";
-const socketRoute = "https://stormy-mesa-81778.herokuapp.com/";
-const socket = io(socketRoute);
 
-const GameComponent = () => {
+
+const GameComponent = (socket) => {
   return (
     <View style={styles.container}>
       <Board />
