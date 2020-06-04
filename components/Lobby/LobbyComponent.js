@@ -12,7 +12,7 @@ const LobbyComponent = ({ navigation }) => {
   const buscarPartida = ()=>{
     console.log("busca partida");
     socket.emit('findMatch');
-    socket.on("maaatchFound", () => {
+    socket.on("matchFound", () => {
       console.log("encontro partida");
       navigation.navigate("Game");
     });
