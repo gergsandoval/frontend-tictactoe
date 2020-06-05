@@ -4,7 +4,7 @@ import SocketContext from './socket-context';
 import TicTacToeApp from "./components/TicTacToeApp";
 import io from "socket.io-client";
 
-const socketRoute = "https://stormy-mesa-81778.herokuapp.com/";
+const socketRoute = "https://fast-woodland-88524.herokuapp.com/";
 //const socketRoute = "http://localhost:3000/";
 const socket = io(socketRoute);
 
