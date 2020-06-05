@@ -21,13 +21,21 @@ const LoginComponent = ({ navigation }) => {
     })();
   }, []);
 
-  googleConnect = async () => {
+  const googleConnect = async () => {
     const authState = await signInAsync();
     const userInfo = await getUserInfo(authState);
     setAuthState(authState);
     navigation.navigate("Lobby", {
       userInfo: userInfo,
     });
+  };
+
+  const getGameInfo = async googleId => {
+    const gameInfo = await fetch(`http://10.0.2.2:3000/users/${googleId}`)
+      .then(response => response.json())
+      .then(data => data)
+      .catch(error => console.error(error));
+    return gameInfo;
   };
 
   return (
