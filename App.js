@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import SocketContext from "./socket-context";
 import TicTacToeApp from "./components/TicTacToeApp";
 import io from "socket.io-client";
-import { herokuSocketRoute, localSocketRoute } from "./socketRoute";
+import { herokuSocketRoute } from "./socketRoute";
 
 const socketRoute = herokuSocketRoute;
 const socket = io(socketRoute);

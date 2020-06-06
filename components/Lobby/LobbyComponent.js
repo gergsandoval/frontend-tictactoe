@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Button } from "react-native-paper";
 import FirstRank from "./firstRank";
 import SocketContext from "../../socket-context";
 
-const LobbyComponent = ({ navigation }) => {
+const LobbyComponent = ({ navigation, route }) => {
+  console.log("gameInfo llego al Lobby?", route.params.gameInfo);
   const socket = React.useContext(SocketContext);
   const buscarPartida = () => {
     console.log("busca partida");

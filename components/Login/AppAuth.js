@@ -19,7 +19,6 @@ export async function signInAsync() {
 export async function getCachedAuthAsync() {
   let value = await AsyncStorage.getItem(GoogleToken);
   let authState = JSON.parse(value);
-  console.log("cachedAuth", authState.refreshToken);
   if (authState) {
     if (checkIfTokenExpired(authState)) {
       return refreshAuthAsync(authState);
