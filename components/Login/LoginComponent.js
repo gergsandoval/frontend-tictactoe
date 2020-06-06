@@ -3,45 +3,76 @@ import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
 import { signInAsync, getCachedAuthAsync, getUserInfo } from "./AppAuth";
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
+import { herokuSocketRoute } from "../../socketRoute";
 
 const LoginComponent = ({ navigation }) => {
   let [authState, setAuthState] = useState(null);
+  let [gameInfo, setGameInfo] = useState(null);
 
   useEffect(() => {
-    (async () => {
-      let cachedAuth = await getCachedAuthAsync();
-      if (cachedAuth && !authState) {
-        const userInfo = await getUserInfo(cachedAuth);
-        navigation.navigate("Lobby", {
-          title: `Bienvenido ${userInfo.name}`,
-          userInfo: userInfo,
-        });
-        setAuthState(cachedAuth);
-      }
-    })();
+    googleCacheConnect();
   }, []);
 
-  const googleConnect = async () => {
-    let userInfo;
-    if (Constants.deviceName != "Chrome") {
-      const authState = await signInAsync();
-      userInfo = await getUserInfo(authState);
-      setAuthState(authState);
-    } else {
-      userInfo = "";
+  const googleCacheConnect = async () => {
+    let cachedAuth = await getCachedAuthAsync();
+    if (cachedAuth && !authState) {
+      setAuthState(cachedAuth);
+      userExistsInTicTacToeApp(cachedAuth);
+      navigateToLobby();
     }
-    navigation.navigate("Lobby", {
-      userInfo: userInfo,
-    });
   };
 
-  const getGameInfo = async googleId => {
-    const gameInfo = await fetch(`http://10.0.2.2:3000/users/${googleId}`)
+  const googleConnect = async () => {
+    if (Constants.deviceName != "Chrome") {
+      const authState = await signInAsync();
+      setAuthState(authState);
+      userExistsInTicTacToeApp(authState);
+    }
+    navigateToLobby();
+  };
+
+  const navigateToLobby = () => {
+    navigation.navigate("Lobby", gameInfo);
+  };
+
+  const userExistsInTicTacToeApp = async authState => {
+    const userInfo = await getUserInfo(authState);
+    console.log("userExistsInTicTacToeApp", userInfo);
+    getGameInfo(userInfo);
+  };
+
+  const getGameInfo = userInfo => {
+    fetch(`${herokuSocketRoute}users/${userInfo.id}`)
       .then(response => response.json())
-      .then(data => data)
+      .then(data => {
+        if (data === "El usuario no existe") {
+          console.log("no existe? ", data);
+          createUserInTicTacToeApp(userInfo);
+        } else {
+          setGameInfo(data);
+        }
+      })
       .catch(error => console.error(error));
-    return gameInfo;
+  };
+
+  const createUserInTicTacToeApp = ({ id, name }) => {
+    fetch(`${herokuSocketRoute}users/`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        googleId: id,
+        name: name,
+        createdDate: new Date(),
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        setGameInfo(data);
+      });
   };
 
   return (

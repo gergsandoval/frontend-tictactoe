@@ -7,19 +7,20 @@ const FirstRank = ({ navigation }) => {
   let [firstRankInfo, setFirstRankInfo] = React.useState([]);
 
   React.useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    const unsubscribe = navigation.addListener("focus", async () => {
       getRankOne();
     });
     return unsubscribe;
   }, [navigation]);
 
-  const getRankOne = () => {
+  const getRankOne = async () => {
     fetch(`${herokuSocketRoute}${"ranking/getRankOne"}`)
       .then(response => response.json())
       .then(data => {
         setFirstRankInfo(data);
       });
   };
+
   return (
     <View>
       <View style={styles.container}>
