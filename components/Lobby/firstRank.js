@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { DataTable, Button } from "react-native-paper";
-import { herokuSocketRoute, localSocketRoute } from "../../socketRoute";
+import { herokuSocketRoute } from "../../socketRoute";
 
 const FirstRank = ({ navigation }) => {
   let [firstRankInfo, setFirstRankInfo] = React.useState([]);
