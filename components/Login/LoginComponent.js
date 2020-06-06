@@ -8,32 +8,32 @@ import { herokuSocketRoute } from "../../socketRoute";
 
 const LoginComponent = ({ navigation }) => {
   let [authState, setAuthState] = useState(null);
-  let [gameInfo, setGameInfo] = useState(null);
 
   useEffect(() => {
+    const googleCacheConnect = async () => {
+      let cachedAuth = await getCachedAuthAsync();
+      if (cachedAuth && !authState) {
+        setAuthState(cachedAuth);
+        userExistsInTicTacToeApp(cachedAuth);
+      }
+    }
     googleCacheConnect();
   }, []);
 
-  const googleCacheConnect = async () => {
-    let cachedAuth = await getCachedAuthAsync();
-    if (cachedAuth && !authState) {
-      setAuthState(cachedAuth);
-      userExistsInTicTacToeApp(cachedAuth);
-      navigateToLobby();
-    }
-  };
+
 
   const googleConnect = async () => {
     if (Constants.deviceName != "Chrome") {
       const authState = await signInAsync();
       setAuthState(authState);
       userExistsInTicTacToeApp(authState);
+    } else {
+      navigateToLobby(null);
     }
-    navigateToLobby();
   };
 
-  const navigateToLobby = () => {
-    navigation.navigate("Lobby", gameInfo);
+  const navigateToLobby = data => {
+    navigation.navigate("Lobby", { gameInfo: data });
   };
 
   const userExistsInTicTacToeApp = async authState => {
@@ -47,10 +47,9 @@ const LoginComponent = ({ navigation }) => {
       .then(response => response.json())
       .then(data => {
         if (data === "El usuario no existe") {
-          console.log("no existe? ", data);
           createUserInTicTacToeApp(userInfo);
         } else {
-          setGameInfo(data);
+          navigateToLobby(data);
         }
       })
       .catch(error => console.error(error));
@@ -71,7 +70,7 @@ const LoginComponent = ({ navigation }) => {
     })
       .then(response => response.json())
       .then(data => {
-        setGameInfo(data);
+        navigateToLobby(data);
       });
   };
 
