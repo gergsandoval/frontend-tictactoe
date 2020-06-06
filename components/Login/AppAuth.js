@@ -19,6 +19,7 @@ export async function signInAsync() {
 export async function getCachedAuthAsync() {
   let value = await AsyncStorage.getItem(GoogleToken);
   let authState = JSON.parse(value);
+  console.log("cachedAuth", authState.refreshToken);
   if (authState) {
     if (checkIfTokenExpired(authState)) {
       return refreshAuthAsync(authState);
@@ -37,9 +38,11 @@ const checkIfTokenExpired = ({ accessTokenExpirationDate }) =>
 
 const refreshAuthAsync = async ({ refreshToken }) => {
   const authState = await AppAuth.refreshAsync(config, refreshToken);
+  console.log("refreshedTokenMightNull", authState.refreshToken);
   if (authState.refreshToken === null){
     authState.refreshToken = refreshToken
   }
+  console.log("refreshedTokenNOTNULL", authState.refreshToken);
   await cacheAuthAsync(authState);
   return authState;
 };

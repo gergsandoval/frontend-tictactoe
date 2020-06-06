@@ -1,17 +1,25 @@
 import * as React from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { DataTable, Button } from "react-native-paper";
+import { herokuSocketRoute, localSocketRoute } from "../../socketRoute";
 
 const FirstRank = ({ navigation }) => {
-  const firstRankInfo = [
-    {
-      ranking: 1,
-      name: "JYISYCWeUqe2nzBkO6KG",
-      win: 999,
-      draw: 999,
-      loss: 999,
-    },
-  ];
+  let [firstRankInfo, setFirstRankInfo] = React.useState([]);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getRankOne();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const getRankOne = () => {
+    fetch(`${herokuSocketRoute}${"ranking/getRankOne"}`)
+      .then(response => response.json())
+      .then(data => {
+        setFirstRankInfo(data);
+      });
+  };
   return (
     <View>
       <View style={styles.container}>
@@ -32,17 +40,17 @@ const FirstRank = ({ navigation }) => {
               P
             </DataTable.Title>
           </DataTable.Header>
-          {firstRankInfo.map(info => (
-            <DataTable.Row key={info.ranking}>
-              <DataTable.Cell style={styles.name}>{info.name}</DataTable.Cell>
+          {firstRankInfo.map(({ _id, name, wins, ties, losses }) => (
+            <DataTable.Row key={_id}>
+              <DataTable.Cell style={styles.name}>{name}</DataTable.Cell>
               <DataTable.Cell style={styles.number} numeric>
-                {info.win}
+                {wins}
               </DataTable.Cell>
               <DataTable.Cell style={styles.number} numeric>
-                {info.draw}
+                {ties}
               </DataTable.Cell>
               <DataTable.Cell style={styles.lastNumber} numeric>
-                {info.loss}
+                {losses}
               </DataTable.Cell>
             </DataTable.Row>
           ))}
@@ -76,7 +84,6 @@ const styles = StyleSheet.create({
   },
   number: {
     flex: 0.4,
-    paddingRight: "3%",
   },
   lastNumber: {
     flex: 0.4,

@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import SocketContext from './socket-context';
+import SocketContext from "./socket-context";
 import TicTacToeApp from "./components/TicTacToeApp";
 import io from "socket.io-client";
+import { herokuSocketRoute, localSocketRoute } from "./socketRoute";
 
-const socketRoute = "https://fast-woodland-88524.herokuapp.com/";
-//const socketRoute = "http://localhost:3000/";
+const socketRoute = herokuSocketRoute;
 const socket = io(socketRoute);
 
 export default class App extends React.Component {
@@ -14,10 +14,10 @@ export default class App extends React.Component {
   }
 
   render = () => {
-    return(
+    return (
       <SocketContext.Provider value={socket}>
         <TicTacToeApp />
       </SocketContext.Provider>
-      )
+    );
   };
 }
