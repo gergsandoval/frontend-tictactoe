@@ -1,17 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Square from "./Square";
-
+import SocketContext from '../../socket-context';
 const Board = () => {
+  const socket = React.useContext(SocketContext);
   const [boardSquares, setBoardSquares] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
-  const handleClick = index => {
-    const squares = [...boardSquares];
-    if (squares[index]) return;
 
-    squares[index] = xIsNext ? "X" : "O";
-    setBoardSquares(squares);
-    setXIsNext(!xIsNext);
+  useEffect(() => {
+    
+    socket.on("boardUpdate", boardState => {
+      console.log(boardState);
+      const squares = [...boardSquares];
+      for (let index = 0; index < boardState.length; index++) {
+        squares[index] = boardState[index];
+      }
+      setBoardSquares(squares);
+      setXIsNext(!xIsNext);
+    });
+
+    socket.on("matchEnded",(winner)=>{
+      console.log("finish");
+    });
+  });
+
+  const handleClick = index => {
+    //const squares = [...boardSquares];
+    //if (squares[index]) return;
+
+    //squares[index] = xIsNext ? "X" : "O";
+    //setBoardSquares(squares);
+    let moveData = {
+      socketId: socket.id,
+      square: index
+    }
+    socket.emit("move", moveData);    
   };
 
   const renderSquare = index => {

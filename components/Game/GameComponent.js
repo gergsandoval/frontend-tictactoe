@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import Board from "./Board";
 
 
+
 const GameComponent = (socket) => {
   return (
     <View style={styles.container}>
