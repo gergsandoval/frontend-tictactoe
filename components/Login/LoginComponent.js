@@ -3,45 +3,75 @@ import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
 import { signInAsync, getCachedAuthAsync, getUserInfo } from "./AppAuth";
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
+import { herokuSocketRoute } from "../../socketRoute";
 
 const LoginComponent = ({ navigation }) => {
   let [authState, setAuthState] = useState(null);
 
   useEffect(() => {
-    (async () => {
+    const googleCacheConnect = async () => {
       let cachedAuth = await getCachedAuthAsync();
       if (cachedAuth && !authState) {
-        const userInfo = await getUserInfo(cachedAuth);
-        navigation.navigate("Lobby", {
-          title: `Bienvenido ${userInfo.name}`,
-          userInfo: userInfo,
-        });
         setAuthState(cachedAuth);
+        userExistsInTicTacToeApp(cachedAuth);
       }
-    })();
+    }
+    googleCacheConnect();
   }, []);
 
+
+
   const googleConnect = async () => {
-    let userInfo;
     if (Constants.deviceName != "Chrome") {
       const authState = await signInAsync();
-      userInfo = await getUserInfo(authState);
       setAuthState(authState);
+      userExistsInTicTacToeApp(authState);
     } else {
-      userInfo = "";
+      navigateToLobby(null);
     }
-    navigation.navigate("Lobby", {
-      userInfo: userInfo,
-    });
   };
 
-  const getGameInfo = async googleId => {
-    const gameInfo = await fetch(`http://10.0.2.2:3000/users/${googleId}`)
+  const navigateToLobby = data => {
+    navigation.navigate("Lobby", { gameInfo: data });
+  };
+
+  const userExistsInTicTacToeApp = async authState => {
+    const userInfo = await getUserInfo(authState);
+    console.log("userExistsInTicTacToeApp", userInfo);
+    getGameInfo(userInfo);
+  };
+
+  const getGameInfo = userInfo => {
+    fetch(`${herokuSocketRoute}users/${userInfo.id}`)
       .then(response => response.json())
-      .then(data => data)
+      .then(data => {
+        if (data === "El usuario no existe") {
+          createUserInTicTacToeApp(userInfo);
+        } else {
+          navigateToLobby(data);
+        }
+      })
       .catch(error => console.error(error));
-    return gameInfo;
+  };
+
+  const createUserInTicTacToeApp = ({ id, name }) => {
+    fetch(`${herokuSocketRoute}users/`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        googleId: id,
+        name: name,
+        createdDate: new Date(),
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        navigateToLobby(data);
+      });
   };
 
   return (

@@ -37,9 +37,11 @@ const checkIfTokenExpired = ({ accessTokenExpirationDate }) =>
 
 const refreshAuthAsync = async ({ refreshToken }) => {
   const authState = await AppAuth.refreshAsync(config, refreshToken);
+  console.log("refreshedTokenMightNull", authState.refreshToken);
   if (authState.refreshToken === null){
     authState.refreshToken = refreshToken
   }
+  console.log("refreshedTokenNOTNULL", authState.refreshToken);
   await cacheAuthAsync(authState);
   return authState;
 };
