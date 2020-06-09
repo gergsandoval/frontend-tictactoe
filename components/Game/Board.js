@@ -2,21 +2,25 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Square from "./Square";
 import SocketContext from '../../socket-context';
-const Board = () => {
+const Board = ({playtoken}) => {
   const socket = React.useContext(SocketContext);
   const [boardSquares, setBoardSquares] = useState(Array(9).fill(null));
-  const [xIsNext, setXIsNext] = useState(true);
+  const [nextToMove, setNextToMove] = useState("X");
+  const [ playToken, setPlayToken ] = useState(playtoken);
 
   useEffect(() => {
     
-    socket.on("boardUpdate", boardState => {
-      console.log(boardState);
+    socket.on("boardUpdate", roomData => {
+      
       const squares = [...boardSquares];
-      for (let index = 0; index < boardState.length; index++) {
-        squares[index] = boardState[index];
+      
+      for (let index = 0; index < roomData.boardState.length; index++) {
+        squares[index] = roomData.boardState[index];
       }
+
       setBoardSquares(squares);
-      setXIsNext(!xIsNext);
+      
+      setNextToMove(roomData.nextToMove);
     });
 
     socket.on("matchEnded",(winner)=>{
@@ -25,16 +29,13 @@ const Board = () => {
   });
 
   const handleClick = index => {
-    //const squares = [...boardSquares];
-    //if (squares[index]) return;
-
-    //squares[index] = xIsNext ? "X" : "O";
-    //setBoardSquares(squares);
-    let moveData = {
-      socketId: socket.id,
-      square: index
+    if(nextToMove === playToken){
+      let moveData = {
+        socketId: socket.id,
+        square: index
+      }
+      socket.emit("move", moveData);    
     }
-    socket.emit("move", moveData);    
   };
 
   const renderSquare = index => {
@@ -46,7 +47,8 @@ const Board = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topBottomContainer}>
-        <Text>{`El proximo que mueve es ${xIsNext ? "X" : "O"}`}</Text>
+        <Text>Tu eres {playToken}</Text>
+        <Text>{`El proximo que mueve es ${nextToMove}`}</Text>
       </View>
       <View style={styles.rowContainer}>
         {renderSquare(0)}

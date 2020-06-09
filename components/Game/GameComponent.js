@@ -4,10 +4,10 @@ import Board from "./Board";
 
 
 
-const GameComponent = (socket) => {
+const GameComponent = ({route, navigation}) => {
   return (
     <View style={styles.container}>
-      <Board />
+      <Board playtoken={route.params.playToken}/>
     </View>
   );
 };

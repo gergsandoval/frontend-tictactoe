@@ -8,19 +8,16 @@ import SocketContext from '../../socket-context'
 const LobbyComponent = ({ navigation }) => {
   const socket = React.useContext(SocketContext);
 
-
   const buscarPartida = ()=>{
-    console.log("busca partida");
     socket.emit('findMatch');
-    socket.on("matchFound", () => {
-      console.log("encontro partida");
-      navigation.navigate("Game");
+    socket.on("matchFound", (playToken) => {
+      navigation.navigate("Game", {
+        playToken: playToken
+      });
     });
   }
 
-  
   return (
-
     <View>
       <FirstRank navigation={navigation} />
       <Button
