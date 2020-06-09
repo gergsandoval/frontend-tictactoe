@@ -2,6 +2,7 @@ import * as React from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { DataTable, Button } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
+import RankingButton from "./RankingButton";
 
 const FirstRank = ({ navigation }) => {
   let [firstRankInfo, setFirstRankInfo] = React.useState([]);
@@ -22,7 +23,7 @@ const FirstRank = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <>
       <View style={styles.container}>
         <Image
           style={styles.icon}
@@ -57,15 +58,10 @@ const FirstRank = ({ navigation }) => {
           ))}
         </DataTable>
       </View>
-      <Button
-        icon="trophy"
-        mode="contained"
-        style={styles.button}
-        onPress={() => navigation.navigate("Ranking")}
-      >
-        Ranking
-      </Button>
-    </View>
+      <View>
+        <RankingButton navigation={navigation} />
+      </View>
+    </>
   );
 };
 export default FirstRank;
@@ -93,8 +89,5 @@ const styles = StyleSheet.create({
     width: "10%",
     alignSelf: "center",
     justifyContent: "center",
-  },
-  button: {
-    marginTop: "21%",
   },
 });
