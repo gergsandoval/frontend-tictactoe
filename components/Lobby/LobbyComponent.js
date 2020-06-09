@@ -7,12 +7,13 @@ import SocketContext from "../../socket-context";
 const LobbyComponent = ({ navigation, route }) => {
   console.log("gameInfo llego al Lobby?", route.params.gameInfo);
   const socket = React.useContext(SocketContext);
-  const buscarPartida = () => {
-    console.log("busca partida");
-    socket.emit("findMatch");
-    socket.on("matchFound", () => {
-      console.log("encontro partida");
-      navigation.navigate("Game");
+
+  const buscarPartida = ()=>{
+    socket.emit('findMatch');
+    socket.on("matchFound", (playToken) => {
+      navigation.navigate("Game", {
+        playToken: playToken
+      });
     });
   };
 
