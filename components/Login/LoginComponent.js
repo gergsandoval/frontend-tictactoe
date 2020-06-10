@@ -38,7 +38,6 @@ const LoginComponent = ({ navigation }) => {
 
   const userExistsInTicTacToeApp = async authState => {
     const userInfo = await getUserInfo(authState);
-    console.log("userExistsInTicTacToeApp", userInfo);
     getGameInfo(userInfo);
   };
 
@@ -46,7 +45,7 @@ const LoginComponent = ({ navigation }) => {
     fetch(`${herokuSocketRoute}users/${userInfo.id}`)
       .then(response => response.json())
       .then(data => {
-        if (data === "El usuario no existe") {
+        if (data.message === "cannot find user") {
           createUserInTicTacToeApp(userInfo);
         } else {
           navigateToLobby(data);
