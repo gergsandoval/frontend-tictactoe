@@ -6,8 +6,8 @@ import io from "socket.io-client";
 import { herokuSocketRoute } from "./socketRoute";
 
 
-//const socketRoute = herokuSocketRoute;
-const socketRoute = "http://localhost:3000/";
+const socketRoute = herokuSocketRoute;
+
 
 const socket = io(socketRoute);
 
