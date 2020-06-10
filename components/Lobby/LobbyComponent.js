@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import FirstRank from "./firstRank";
 import SocketContext from "../../socket-context";
-import FindMatchButton from "./findMatchButton"
+import FindMatchButton from "./FindMatchButton"
 import Players from "./Players"
 
 const LobbyComponent = ({ navigation, route }) => {
@@ -23,7 +23,7 @@ const LobbyComponent = ({ navigation, route }) => {
         <FirstRank navigation={navigation} />
       </View>
       <View style={styles.players}>
-        <Players />
+        <Players navigation={navigation} />
       </View>
       <View style={styles.button}>
         <FindMatchButton buscarPartida={buscarPartida} />
