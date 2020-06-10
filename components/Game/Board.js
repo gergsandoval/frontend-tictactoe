@@ -7,7 +7,7 @@ const Board = ({playtoken}) => {
   const [boardSquares, setBoardSquares] = useState(Array(9).fill(null));
   const [nextToMove, setNextToMove] = useState("X");
   const [ playToken, setPlayToken ] = useState(playtoken);
-
+  const [ end, setEnd] = useState(false)
   useEffect(() => {
     
     socket.on("boardUpdate", roomData => {
@@ -25,11 +25,12 @@ const Board = ({playtoken}) => {
 
     socket.on("matchEnded",(winner)=>{
       console.log("finish");
+      setEnd(true);
     });
   });
 
   const handleClick = index => {
-    if(nextToMove === playToken){
+    if(nextToMove === playToken && !end){
       let moveData = {
         socketId: socket.id,
         square: index
@@ -49,6 +50,7 @@ const Board = ({playtoken}) => {
       <View style={styles.topBottomContainer}>
         <Text>Tu eres {playToken}</Text>
         <Text>{`El proximo que mueve es ${nextToMove}`}</Text>
+        <Text>{end ? "partida finalizada" : "partida en curso"}</Text>
       </View>
       <View style={styles.rowContainer}>
         {renderSquare(0)}
