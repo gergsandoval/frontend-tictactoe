@@ -16,11 +16,9 @@ const LoginComponent = ({ navigation }) => {
         setAuthState(cachedAuth);
         userExistsInTicTacToeApp(cachedAuth);
       }
-    }
+    };
     googleCacheConnect();
   }, []);
-
-
 
   const googleConnect = async () => {
     if (Constants.deviceName != "Chrome") {
@@ -48,7 +46,7 @@ const LoginComponent = ({ navigation }) => {
         if (data.message === "cannot find user") {
           createUserInTicTacToeApp(userInfo);
         } else {
-          navigateToLobby(data);
+          isUserOnline(data);
         }
       })
       .catch(error => console.error(error));
@@ -69,7 +67,36 @@ const LoginComponent = ({ navigation }) => {
     })
       .then(response => response.json())
       .then(data => {
-        navigateToLobby(data);
+        isUserOnline(data);
+      });
+  };
+
+  const insertOnlineUser = gameInfo => {
+    fetch(`${herokuSocketRoute}onlineUsers/`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        googleId: gameInfo.googleId,
+        name: gameInfo.name,
+      }),
+    }).then(() => {
+      navigateToLobby(gameInfo);
+    });
+  };
+
+  const isUserOnline = gameInfo => {
+    fetch(`${herokuSocketRoute}onlineUsers/${gameInfo.googleId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === "cannot find online user") {
+          insertOnlineUser(gameInfo);
+        }
+      })
+      .then(() => {
+        navigateToLobby(gameInfo);
       });
   };
 
