@@ -1,41 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Square from "./Square";
-import SocketContext from '../../socket-context';
-const Board = ({playtoken}) => {
+import SocketContext from "../../socket-context";
+const Board = ({ playtoken }) => {
   const socket = React.useContext(SocketContext);
   const [boardSquares, setBoardSquares] = useState(Array(9).fill(null));
   const [nextToMove, setNextToMove] = useState("X");
-  const [ playToken, setPlayToken ] = useState(playtoken);
-  const [ end, setEnd] = useState(false)
+  const [playToken, setPlayToken] = useState(playtoken);
+  const [end, setEnd] = useState(false);
   useEffect(() => {
-    
     socket.on("boardUpdate", roomData => {
-      
-      const squares = [...boardSquares];
-      
-      for (let index = 0; index < roomData.boardState.length; index++) {
-        squares[index] = roomData.boardState[index];
-      }
+      console.log("se actualizo el tablero");
+      const squares = [...roomData.boardState];
+
+      // for (let index = 0; index < roomData.boardState.length; index++) {
+      //   squares[index] = roomData.boardState[index];
+      // }
 
       setBoardSquares(squares);
-      
       setNextToMove(roomData.nextToMove);
     });
 
-    socket.on("matchEnded",(winner)=>{
+    socket.on("matchEnded", winner => {
       console.log("finish");
       setEnd(true);
     });
-  });
+  }, []);
 
   const handleClick = index => {
-    if(nextToMove === playToken && !end){
+    const squares = [...boardSquares];
+    if (squares[index]) return;
+    if (nextToMove === playToken && !end) {
       let moveData = {
         socketId: socket.id,
-        square: index
-      }
-      socket.emit("move", moveData);    
+        square: index,
+      };
+      socket.emit("move", moveData);
     }
   };
 
