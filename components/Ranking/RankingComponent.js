@@ -1,6 +1,5 @@
 import * as React from "react";
 import { StyleSheet, ScrollView } from "react-native";
-import Ranking from "../../ranking";
 import { DataTable } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 
