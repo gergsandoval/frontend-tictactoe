@@ -2,13 +2,17 @@ import React, { useRef, useEffect, useState } from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import { List } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
+import SocketContext from "../../socket-context";
 
 const Players = ({ navigation }) => {
+  const socket = React.useContext(SocketContext);
+
   const onlineRef = useRef();
   const queueRef = useRef();
 
   let [onlineUsers, setOnlineUsers] = useState([]);
   let [queueUsers, setQueueUsers] = useState([]);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       getOnlineUsers();
