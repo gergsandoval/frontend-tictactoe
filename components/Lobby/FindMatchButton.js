@@ -13,6 +13,7 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
     socket.on("matchFound", playToken => {
       navigation.navigate("Game", {
         playToken: playToken,
+        gameInfo: gameInfo,
       });
     });
   };

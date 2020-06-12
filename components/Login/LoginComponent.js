@@ -9,9 +9,11 @@ import SocketContext from "../../socket-context";
 
 const LoginComponent = ({ navigation }) => {
   const socket = React.useContext(SocketContext);
+  const [gettingInfo, setGettingInfo] = useState(false);
 
   useEffect(() => {
     const googleCacheConnect = async () => {
+      setGettingInfo(true);
       let cachedAuth = await getCachedAuthAsync();
       if (cachedAuth) {
         const googleInfo = await getGoogleInfo(cachedAuth);
@@ -22,11 +24,13 @@ const LoginComponent = ({ navigation }) => {
         console.log("onlineInfo: ", onlineInfo);
         navigateToLobby(gameInfo);
       }
+      setGettingInfo(false);
     };
     googleCacheConnect();
   }, []);
 
   const googleConnect = async () => {
+    setGettingInfo(true);
     if (Constants.deviceName != "Chrome") {
       const authState = await signInAsync();
       const googleInfo = await getGoogleInfo(authState);
@@ -39,6 +43,7 @@ const LoginComponent = ({ navigation }) => {
     } else {
       navigateToLobby(null);
     }
+    setGettingInfo(false);
   };
 
   const navigateToLobby = data => {
@@ -81,8 +86,8 @@ const LoginComponent = ({ navigation }) => {
 
   return (
     <View style={styles.ButtonContainer}>
-      <LoginButton signIn={() => googleConnect()} />
-      <ExitButton />
+      <LoginButton disabled={gettingInfo} signIn={() => googleConnect()} />
+      <ExitButton disabled={gettingInfo} />
     </View>
   );
 };
