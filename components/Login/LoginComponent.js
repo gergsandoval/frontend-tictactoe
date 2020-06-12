@@ -2,19 +2,25 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
-import { signInAsync, getCachedAuthAsync, getUserInfo } from "./AppAuth";
+import { signInAsync, getCachedAuthAsync, getGoogleInfo } from "./AppAuth";
 import Constants from "expo-constants";
 import { herokuSocketRoute } from "../../socketRoute";
+import SocketContext from "../../socket-context";
 
 const LoginComponent = ({ navigation }) => {
-  let [authState, setAuthState] = useState(null);
+  const socket = React.useContext(SocketContext);
 
   useEffect(() => {
     const googleCacheConnect = async () => {
       let cachedAuth = await getCachedAuthAsync();
-      if (cachedAuth && !authState) {
-        setAuthState(cachedAuth);
-        userExistsInTicTacToeApp(cachedAuth);
+      if (cachedAuth) {
+        const googleInfo = await getGoogleInfo(cachedAuth);
+        console.log("googleInfo: ", googleInfo);
+        const gameInfo = await getGameInfo(googleInfo);
+        console.log("gameInfo: ", gameInfo);
+        const onlineInfo = await getOnlineInfo(gameInfo);
+        console.log("onlineInfo: ", onlineInfo);
+        navigateToLobby(gameInfo);
       }
     };
     googleCacheConnect();
@@ -23,8 +29,13 @@ const LoginComponent = ({ navigation }) => {
   const googleConnect = async () => {
     if (Constants.deviceName != "Chrome") {
       const authState = await signInAsync();
-      setAuthState(authState);
-      userExistsInTicTacToeApp(authState);
+      const googleInfo = await getGoogleInfo(authState);
+      console.log("googleInfo: ", googleInfo);
+      const gameInfo = await getGameInfo(googleInfo);
+      console.log("gameInfo: ", gameInfo);
+      const onlineInfo = await getOnlineInfo(gameInfo);
+      console.log("onlineInfo: ", onlineInfo);
+      navigateToLobby(gameInfo);
     } else {
       navigateToLobby(null);
     }
@@ -34,26 +45,8 @@ const LoginComponent = ({ navigation }) => {
     navigation.navigate("Lobby", { gameInfo: data });
   };
 
-  const userExistsInTicTacToeApp = async authState => {
-    const userInfo = await getUserInfo(authState);
-    getGameInfo(userInfo);
-  };
-
-  const getGameInfo = userInfo => {
-    fetch(`${herokuSocketRoute}users/${userInfo.id}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.message === "cannot find user") {
-          createUserInTicTacToeApp(userInfo);
-        } else {
-          isUserOnline(data);
-        }
-      })
-      .catch(error => console.error(error));
-  };
-
-  const createUserInTicTacToeApp = ({ id, name }) => {
-    fetch(`${herokuSocketRoute}users/`, {
+  const getGameInfo = ({ id, name }) => {
+    return fetch(`${herokuSocketRoute}users/`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -66,38 +59,24 @@ const LoginComponent = ({ navigation }) => {
       }),
     })
       .then(response => response.json())
-      .then(data => {
-        isUserOnline(data);
-      });
+      .then(data => data);
   };
 
-  const insertOnlineUser = gameInfo => {
-    fetch(`${herokuSocketRoute}onlineUsers/`, {
+  const getOnlineInfo = ({ googleId, name }) => {
+    return fetch(`${herokuSocketRoute}onlineUsers/`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        googleId: gameInfo.googleId,
-        name: gameInfo.name,
+        googleId: googleId,
+        name: name,
+        socketId: socket.id,
       }),
-    }).then(() => {
-      navigateToLobby(gameInfo);
-    });
-  };
-
-  const isUserOnline = gameInfo => {
-    fetch(`${herokuSocketRoute}onlineUsers/${gameInfo.googleId}`)
+    })
       .then(response => response.json())
-      .then(data => {
-        if (data.message === "cannot find online user") {
-          insertOnlineUser(gameInfo);
-        }
-      })
-      .then(() => {
-        navigateToLobby(gameInfo);
-      });
+      .then(data => data);
   };
 
   return (

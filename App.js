@@ -5,12 +5,7 @@ import TicTacToeApp from "./components/TicTacToeApp";
 import io from "socket.io-client";
 import { herokuSocketRoute } from "./socketRoute";
 
-
-const socketRoute = herokuSocketRoute;
-
-
-const socket = io(socketRoute);
-
+const socket = io(herokuSocketRoute);
 export default class App extends React.Component {
   constructor() {
     super();
