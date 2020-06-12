@@ -37,11 +37,9 @@ const checkIfTokenExpired = ({ accessTokenExpirationDate }) =>
 
 const refreshAuthAsync = async ({ refreshToken }) => {
   const authState = await AppAuth.refreshAsync(config, refreshToken);
-  console.log("refreshedTokenMightNull", authState.refreshToken);
-  if (authState.refreshToken === null){
-    authState.refreshToken = refreshToken
+  if (authState.refreshToken === null) {
+    authState.refreshToken = refreshToken;
   }
-  console.log("refreshedTokenNOTNULL", authState.refreshToken);
   await cacheAuthAsync(authState);
   return authState;
 };
@@ -56,7 +54,7 @@ export async function getUserInfo({accessToken}) {
 }
 
 export async function signOutAsync() {
-  const {accessToken} = await AsyncStorage.getItem(GoogleToken);
+  const { accessToken } = await AsyncStorage.getItem(GoogleToken);
   try {
     await AppAuth.revokeAsync(config, {
       token: accessToken,

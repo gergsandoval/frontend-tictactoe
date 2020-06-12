@@ -8,16 +8,11 @@ const Board = ({ playtoken }) => {
   const [nextToMove, setNextToMove] = useState("X");
   const [playToken, setPlayToken] = useState(playtoken);
   const [end, setEnd] = useState(false);
+
   useEffect(() => {
     socket.on("boardUpdate", roomData => {
       console.log("se actualizo el tablero");
-      const squares = [...roomData.boardState];
-
-      // for (let index = 0; index < roomData.boardState.length; index++) {
-      //   squares[index] = roomData.boardState[index];
-      // }
-
-      setBoardSquares(squares);
+      setBoardSquares(roomData.boardState);
       setNextToMove(roomData.nextToMove);
     });
 
