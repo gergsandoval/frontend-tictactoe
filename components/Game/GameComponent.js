@@ -7,7 +7,7 @@ import Board from "./Board";
 const GameComponent = ({route, navigation}) => {
   return (
     <View style={styles.container}>
-      <Board playtoken={route.params.playToken}/>
+      <Board playtoken={route.params.playToken} navigation={navigation}/>
     </View>
   );
 };

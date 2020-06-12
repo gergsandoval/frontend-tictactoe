@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Square from "./Square";
+import GameOverPopUp from "./GameOverPopUp";
 import SocketContext from "../../socket-context";
-const Board = ({ playtoken }) => {
+const Board = ({ playtoken, navigation }) => {
   const socket = React.useContext(SocketContext);
   const [boardSquares, setBoardSquares] = useState(Array(9).fill(null));
   const [nextToMove, setNextToMove] = useState("X");
@@ -47,6 +48,7 @@ const Board = ({ playtoken }) => {
         <Text>{`El proximo que mueve es ${nextToMove}`}</Text>
         <Text>{end ? "partida finalizada" : "partida en curso"}</Text>
       </View>
+      <GameOverPopUp navigation={navigation} visible={!end} data={"La partida a terminado"}></GameOverPopUp>
       <View style={styles.rowContainer}>
         {renderSquare(0)}
         {renderSquare(1)}
