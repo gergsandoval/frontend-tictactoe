@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import Board from "./Board";
 
-
-
-const GameComponent = ({route, navigation}) => {
+const GameComponent = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
-      <Board playtoken={route.params.playToken}/>
+      <Board
+        playtoken={route.params.playToken}
+        navigation={navigation}
+        gameInfo={route.params.gameInfo}
+      />
     </View>
   );
 };

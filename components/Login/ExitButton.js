@@ -2,13 +2,14 @@ import React from "react";
 import { View, Text, StyleSheet, BackHandler } from "react-native";
 import { Button } from "react-native-paper";
 
-const ExitButton = () => (
+const ExitButton = props => (
   <View>
     <Button
       icon="exit-run"
       mode="contained"
       style={styles.button}
       onPress={() => BackHandler.exitApp()}
+      disabled={props.disabled}
     >
       Salir
     </Button>
