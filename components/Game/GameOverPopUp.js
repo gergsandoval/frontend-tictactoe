@@ -13,7 +13,7 @@ export default class GameOverPopUp extends React.Component {
     _showModal = () => this.setState({ visible: true });
     _hideModal = () => {
       this.setState({ visible: false })
-      this.props.navigation.navigate("Lobby", { gameInfo: null });
+      this.props.navigation.navigate("Lobby", { gameInfo: this.props.gameInfo});
     };
 
   render() {

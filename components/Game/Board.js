@@ -3,12 +3,15 @@ import { View, StyleSheet, Text } from "react-native";
 import Square from "./Square";
 import GameOverPopUp from "./GameOverPopUp";
 import SocketContext from "../../socket-context";
-const Board = ({ playtoken, navigation }) => {
+import { herokuSocketRoute } from "../../socketRoute";
+
+const Board = ({ playtoken, navigation, gameInfo }) => {
+
   const socket = React.useContext(SocketContext);
   const [boardSquares, setBoardSquares] = useState(Array(9).fill(null));
   const [nextToMove, setNextToMove] = useState("X");
   const [playToken, setPlayToken] = useState(playtoken);
-  const [end, setEnd] = useState(false);
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
     socket.on("boardUpdate", roomData => {
@@ -17,16 +20,39 @@ const Board = ({ playtoken, navigation }) => {
       setNextToMove(roomData.nextToMove);
     });
 
-    socket.on("matchEnded", winner => {
-      console.log("finish");
-      setEnd(true);
+    socket.on("matchEnded", async winner => {
+      console.log(`gano ${winner}`);
+      setWinner(winner);
+      const method = !winner
+        ? "Ties"
+        : winner === playToken
+        ? "Wins"
+        : "Losses";
+      const updateInfo = await updateRanking(gameInfo, method);
+      console.log("updateInfo: ", updateInfo);
     });
   }, []);
+
+  const updateRanking = (gameInfo, method) => {
+    return fetch(
+      `${herokuSocketRoute}users/update${method}/${gameInfo.googleId}`,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(gameInfo),
+      }
+    )
+      .then(response => response.json())
+      .then(data => data);
+  };
 
   const handleClick = index => {
     const squares = [...boardSquares];
     if (squares[index]) return;
-    if (nextToMove === playToken && !end) {
+    if (nextToMove === playToken && !winner) {
       let moveData = {
         socketId: socket.id,
         square: index,
@@ -37,7 +63,11 @@ const Board = ({ playtoken, navigation }) => {
 
   const renderSquare = index => {
     return (
-      <Square value={boardSquares[index]} onPress={() => handleClick(index)} />
+      <Square
+        disabled={winner != null}
+        value={boardSquares[index]}
+        onPress={() => handleClick(index)}
+      />
     );
   };
 
@@ -45,10 +75,12 @@ const Board = ({ playtoken, navigation }) => {
     <View style={styles.container}>
       <View style={styles.topBottomContainer}>
         <Text>Tu eres {playToken}</Text>
-        <Text>{`El proximo que mueve es ${nextToMove}`}</Text>
-        <Text>{end ? "partida finalizada" : "partida en curso"}</Text>
+        <Text>
+          {winner ? `Gano ${winner}` : `El proximo que mueve es ${nextToMove}`}
+        </Text>
+        <Text>{winner ? "Partida finalizada" : "Partida en curso"}</Text>
       </View>
-      <GameOverPopUp navigation={navigation} visible={!end} data={"La partida a terminado"}></GameOverPopUp>
+      <GameOverPopUp navigation={navigation} visible={winner} data={"La partida a terminado"}></GameOverPopUp>
       <View style={styles.rowContainer}>
         {renderSquare(0)}
         {renderSquare(1)}
