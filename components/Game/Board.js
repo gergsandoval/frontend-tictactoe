@@ -12,6 +12,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const [nextToMove, setNextToMove] = useState("X");
   const [playToken, setPlayToken] = useState(playtoken);
   const [winner, setWinner] = useState(null);
+  const [matchEnded, setEnd] = useState(false);
 
   useEffect(() => {
     socket.on("boardUpdate", roomData => {
@@ -21,6 +22,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
     });
 
     socket.on("matchEnded", async winner => {
+      console.log(winner);
       console.log(`gano ${winner}`);
       setWinner(winner);
       const method = !winner
@@ -71,6 +73,17 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
     );
   };
 
+  const renderModal = () => {
+    return(
+      <GameOverPopUp 
+      navigation={navigation} 
+      visible={winner != null} 
+      data={"La partida a terminado"} 
+      gameInfo={gameInfo}>
+    </GameOverPopUp>
+    )
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topBottomContainer}>
@@ -80,7 +93,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
         </Text>
         <Text>{winner ? "Partida finalizada" : "Partida en curso"}</Text>
       </View>
-      <GameOverPopUp navigation={navigation} visible={winner} data={"La partida a terminado"}></GameOverPopUp>
+      {renderModal()}
       <View style={styles.rowContainer}>
         {renderSquare(0)}
         {renderSquare(1)}

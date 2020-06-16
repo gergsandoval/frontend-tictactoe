@@ -1,31 +1,22 @@
 import * as React from 'react';
 import { Modal, Portal, Text, Button, Provider } from 'react-native-paper';
+const GameOverPopUp = ({visible, navigation, gameInfo, data}) => {
 
-export default class GameOverPopUp extends React.Component {
+  const _showModal = () => visible = true;
+  const _hideModal = () => {
+    visible = false
+    navigation.navigate("Lobby", { gameInfo: gameInfo});
+  };
+
   
-  constructor(props){
-    super(props);
-    this.state = {
-        visible: props.visible,
-    };
-  }
-
-    _showModal = () => this.setState({ visible: true });
-    _hideModal = () => {
-      this.setState({ visible: false })
-      this.props.navigation.navigate("Lobby", { gameInfo: this.props.gameInfo});
-    };
-
-  render() {
-    const { visible } = this.state;
     return (
       <Provider>
-         <Portal>
-           <Modal visible={visible} onDismiss={this._hideModal}>
-             <Text>{this.props.data}</Text>
-           </Modal>
+        <Portal>
+          <Modal visible={visible} onDismiss={_hideModal}>
+            <Text>{data}</Text>
+          </Modal>
         </Portal>
       </Provider>
     );
-  }
 }
+export default GameOverPopUp;

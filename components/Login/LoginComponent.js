@@ -41,7 +41,7 @@ const LoginComponent = ({ navigation }) => {
       console.log("onlineInfo: ", onlineInfo);
       navigateToLobby(gameInfo);
     } else {
-      navigateToLobby(null);
+      navigateToLobby({});
     }
     setGettingInfo(false);
   };
