@@ -48,9 +48,8 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   };
 
   const handleClick = index => {
-    const squares = [...boardSquares];
-    if (squares[index]) return;
-    if (nextToMove === playToken && !winner) {
+    if (!boardSquares[index] && nextToMove === playToken && !winner) {
+      setNextToMove(nextToMove === "X" ? "O" : "X");
       let moveData = {
         socketId: socket.id,
         square: index,
@@ -69,14 +68,24 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
     );
   };
 
+  const updateNextToMoveText = winner =>
+    winner
+      ? `Gano ${winner}`
+      : !winner && boardSquares.filter(square => square != null).length === 9
+      ? "Empate"
+      : `El proximo que mueve es ${nextToMove}`;
+
+  const updateMatchState = winner =>
+    updateNextToMoveText(winner) === "Empate" || winner
+      ? "Partida Finalizada"
+      : "Partida en Curso";
+
   return (
     <View style={styles.container}>
       <View style={styles.topBottomContainer}>
         <Text>Tu eres {playToken}</Text>
-        <Text>
-          {winner ? `Gano ${winner}` : `El proximo que mueve es ${nextToMove}`}
-        </Text>
-        <Text>{winner ? "Partida finalizada" : "Partida en curso"}</Text>
+        <Text>{updateNextToMoveText(winner)}</Text>
+        <Text>{updateMatchState(winner)}</Text>
       </View>
       <View style={styles.rowContainer}>
         {renderSquare(0)}
