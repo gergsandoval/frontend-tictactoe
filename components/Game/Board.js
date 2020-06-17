@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, ImageComponent } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import Square from "./Square";
 import GameOverPopUp from "./GameOverPopUp";
 import SocketContext from "../../socket-context";
