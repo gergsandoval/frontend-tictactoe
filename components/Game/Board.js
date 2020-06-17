@@ -14,25 +14,31 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const [winner, setWinner] = useState(null);
   const [matchEnded, setEnd] = useState(false);
 
-  useEffect(() => {
-    socket.on("boardUpdate", roomData => {
-      console.log("se actualizo el tablero");
-      setBoardSquares(roomData.boardState);
-      setNextToMove(roomData.nextToMove);
-    });
+  const boardUpdate = roomData => {
+    console.log("se actualizo el tablero");
+    setBoardSquares(roomData.boardState);
+    setNextToMove(roomData.nextToMove);
+  };
 
-    socket.on("matchEnded", async winner => {
-      console.log(winner);
-      console.log(`gano ${winner}`);
-      setWinner(winner);
-      const method = !winner
-        ? "Ties"
-        : winner === playToken
-        ? "Wins"
-        : "Losses";
-      const updateInfo = await updateRanking(gameInfo, method);
-      console.log("updateInfo: ", updateInfo);
-    });
+  const matchEnded = async winner => {
+    console.log(`gano ${winner}`);
+    setWinner(winner);
+    const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
+    gameInfo = await updateRanking(gameInfo, method);
+    console.log("updated GameInfo: ", gameInfo);
+    setTimeout(() => {
+      navigation.navigate("Lobby", { gameInfo: gameInfo });
+    }, 3000);
+  };
+
+  useEffect(() => {
+    socket.on("boardUpdate", roomData => boardUpdate(roomData));
+    socket.on("matchEnded", winner => matchEnded(winner));
+
+    return () => {
+      socket.off("boardUpdate");
+      socket.off("matchEnded");
+    };
   }, []);
 
   const updateRanking = (gameInfo, method) => {
@@ -52,9 +58,8 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   };
 
   const handleClick = index => {
-    const squares = [...boardSquares];
-    if (squares[index]) return;
-    if (nextToMove === playToken && !winner) {
+    if (!boardSquares[index] && nextToMove === playToken && !winner) {
+      setNextToMove(nextToMove === "X" ? "O" : "X");
       let moveData = {
         socketId: socket.id,
         square: index,
@@ -73,6 +78,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
     );
   };
 
+
   const renderModal = () => {
     return(
       <GameOverPopUp 
@@ -84,14 +90,25 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
     )
   }
 
+  const updateNextToMoveText = winner =>
+    winner
+      ? `Gano ${winner}`
+      : !winner && boardSquares.filter(square => square != null).length === 9
+      ? "Empate"
+      : `El proximo que mueve es ${nextToMove}`;
+
+  const updateMatchState = winner =>
+    updateNextToMoveText(winner) === "Empate" || winner
+      ? "Partida Finalizada"
+      : "Partida en Curso";
+
+
   return (
     <View style={styles.container}>
       <View style={styles.topBottomContainer}>
         <Text>Tu eres {playToken}</Text>
-        <Text>
-          {winner ? `Gano ${winner}` : `El proximo que mueve es ${nextToMove}`}
-        </Text>
-        <Text>{winner ? "Partida finalizada" : "Partida en curso"}</Text>
+        <Text>{updateNextToMoveText(winner)}</Text>
+        <Text>{updateMatchState(winner)}</Text>
       </View>
       {renderModal()}
       <View style={styles.rowContainer}>
