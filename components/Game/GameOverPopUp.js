@@ -9,13 +9,12 @@ import {
 } from "react-native";
 
 const GameOverPopUp = ({visible, navigation, gameInfo}) => {
-  const [modalVisible, setModalVisible] = useState(visible);
   return (
     <View style={styles.centeredView}>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={visible}
         onRequestClose={() => { }}
       >
         <View style={styles.centeredView}>
@@ -23,11 +22,10 @@ const GameOverPopUp = ({visible, navigation, gameInfo}) => {
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
               onPress={() => {
-                setModalVisible(!modalVisible);
                 navigation.navigate("Lobby", {gameInfo: gameInfo});
               }}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>La partida a finalizado!</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -35,7 +33,9 @@ const GameOverPopUp = ({visible, navigation, gameInfo}) => {
     </View>
   );
 };
+
 export default GameOverPopUp;
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,

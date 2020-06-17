@@ -11,6 +11,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const [nextToMove, setNextToMove] = useState("X");
   const [playToken, setPlayToken] = useState(playtoken);
   const [winner, setWinner] = useState(null);
+  const [end, setEnd] = useState(false);
 
   const boardUpdate = roomData => {
     console.log("se actualizo el tablero");
@@ -21,6 +22,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const matchEnded = async winner => {
     console.log(`gano ${winner}`);
     setWinner(winner);
+    setEnd(true);
     const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
     gameInfo = await updateRanking(gameInfo, method);
     console.log("updated GameInfo: ", gameInfo);
@@ -79,7 +81,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const renderModal = () => {
     return (
       <GameOverPopUp
-        visible={winner != null}
+        visible={end}
         navigation={navigation}
         gameInfo={gameInfo}
       >
@@ -107,6 +109,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
         <Text>{updateNextToMoveText(winner)}</Text>
         <Text>{updateMatchState(winner)}</Text>
       </View>
+      {renderModal()}
       <View style={styles.rowContainer}>
         {renderSquare(0)}
         {renderSquare(1)}
