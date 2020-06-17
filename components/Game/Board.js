@@ -12,7 +12,6 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const [nextToMove, setNextToMove] = useState("X");
   const [playToken, setPlayToken] = useState(playtoken);
   const [winner, setWinner] = useState(null);
-  const [matchEnded, setEnd] = useState(false);
 
   const boardUpdate = roomData => {
     console.log("se actualizo el tablero");
