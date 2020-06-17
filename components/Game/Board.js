@@ -84,11 +84,9 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
         visible={end}
         navigation={navigation}
         gameInfo={gameInfo}
-      >
-
-      </GameOverPopUp>
-    )
-  }
+      ></GameOverPopUp>
+    );
+  };
 
   const updateNextToMoveText = winner =>
     winner
@@ -109,7 +107,8 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
         <Text>{updateNextToMoveText(winner)}</Text>
         <Text>{updateMatchState(winner)}</Text>
       </View>
-      {renderModal()}
+      <View style={styles.modal}>{renderModal()}</View>
+
       <View style={styles.rowContainer}>
         {renderSquare(0)}
         {renderSquare(1)}
@@ -145,5 +144,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: "center",
     justifyContent: "center",
+  },
+  modal: {
+    height: 1,
+    width: 1,
   },
 });
