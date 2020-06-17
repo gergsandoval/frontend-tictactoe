@@ -11,24 +11,31 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const [playToken, setPlayToken] = useState(playtoken);
   const [winner, setWinner] = useState(null);
 
-  useEffect(() => {
-    socket.on("boardUpdate", roomData => {
-      console.log("se actualizo el tablero");
-      setBoardSquares(roomData.boardState);
-      setNextToMove(roomData.nextToMove);
-    });
+  const boardUpdate = roomData => {
+    console.log("se actualizo el tablero");
+    setBoardSquares(roomData.boardState);
+    setNextToMove(roomData.nextToMove);
+  };
 
-    socket.on("matchEnded", async winner => {
-      console.log(`gano ${winner}`);
-      setWinner(winner);
-      const method = !winner
-        ? "Ties"
-        : winner === playToken
-        ? "Wins"
-        : "Losses";
-      const updateInfo = await updateRanking(gameInfo, method);
-      console.log("updateInfo: ", updateInfo);
-    });
+  const matchEnded = async winner => {
+    console.log(`gano ${winner}`);
+    setWinner(winner);
+    const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
+    gameInfo = await updateRanking(gameInfo, method);
+    console.log("updated GameInfo: ", gameInfo);
+    setTimeout(() => {
+      navigation.navigate("Lobby", { gameInfo: gameInfo });
+    }, 3000);
+  };
+
+  useEffect(() => {
+    socket.on("boardUpdate", roomData => boardUpdate(roomData));
+    socket.on("matchEnded", winner => matchEnded(winner));
+
+    return () => {
+      socket.off("boardUpdate");
+      socket.off("matchEnded");
+    };
   }, []);
 
   const updateRanking = (gameInfo, method) => {
