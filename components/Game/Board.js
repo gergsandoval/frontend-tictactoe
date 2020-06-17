@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ImageComponent } from "react-native";
 import Square from "./Square";
+import GameOverPopUp from "./GameOverPopUp";
 import SocketContext from "../../socket-context";
 import { herokuSocketRoute } from "../../socketRoute";
 
@@ -74,6 +75,18 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
       />
     );
   };
+
+  const renderModal = () => {
+    return (
+      <GameOverPopUp
+        visible={winner != null}
+        navigation={navigation}
+        gameInfo={gameInfo}
+      >
+
+      </GameOverPopUp>
+    )
+  }
 
   const updateNextToMoveText = winner =>
     winner
