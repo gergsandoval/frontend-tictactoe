@@ -9,7 +9,10 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
   const socket = React.useContext(SocketContext);
 
   const findMatch = () => {
-    socket.emit("findMatch");
+    socket.emit("findMatch", {
+      googleId: gameInfo.googleId,
+      name: gameInfo.name
+    });
     socket.on("matchFound", playToken => {
       navigation.navigate("Game", {
         playToken: playToken,

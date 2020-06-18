@@ -41,7 +41,11 @@ const LoginComponent = ({ navigation }) => {
       console.log("onlineInfo: ", onlineInfo);
       navigateToLobby(gameInfo);
     } else {
-      navigateToLobby(null);
+      navigateToLobby({
+        googleId: "1234",
+        name: "userWeb",
+        createdDate: new Date(),
+      });
     }
     setGettingInfo(false);
   };
