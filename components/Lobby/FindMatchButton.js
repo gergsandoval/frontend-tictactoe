@@ -10,7 +10,8 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
 
   const findMatch = () => {
     socket.emit("findMatch", {
-      gameInfo: gameInfo
+      googleId: gameInfo.googleId,
+      name: gameInfo.name
     });
     socket.on("matchFound", playToken => {
       navigation.navigate("Game", {
