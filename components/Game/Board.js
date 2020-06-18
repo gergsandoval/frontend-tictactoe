@@ -9,20 +9,20 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const socket = React.useContext(SocketContext);
   const [boardSquares, setBoardSquares] = useState(Array(9).fill(null));
   const [nextToMove, setNextToMove] = useState("X");
+  const [moves, setMoves] = useState(0);
   const [playToken, setPlayToken] = useState(playtoken);
   const [winner, setWinner] = useState(null);
-  const [end, setEnd] = useState(false);
 
   const boardUpdate = roomData => {
     console.log("se actualizo el tablero");
     setBoardSquares(roomData.boardState);
     setNextToMove(roomData.nextToMove);
+    setMoves(roomData.moves);
   };
 
   const matchEnded = async winner => {
     console.log(`gano ${winner}`);
     setWinner(winner);
-    setEnd(true);
     const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
     gameInfo = await updateRanking(gameInfo, method);
     console.log("updated GameInfo: ", gameInfo);
@@ -71,7 +71,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const renderSquare = index => {
     return (
       <Square
-        disabled={winner != null}
+        disabled={moves === 9 || winner != null}
         value={boardSquares[index]}
         onPress={() => handleClick(index)}
       />
@@ -81,7 +81,7 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const renderModal = () => {
     return (
       <GameOverPopUp
-        visible={end}
+        visible={moves === 9 || winner != null}
         navigation={navigation}
         gameInfo={gameInfo}
       ></GameOverPopUp>
@@ -91,14 +91,12 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
   const updateNextToMoveText = winner =>
     winner
       ? `Gano ${winner}`
-      : !winner && boardSquares.filter(square => square != null).length === 9
+      : moves === 9 && !winner
       ? "Empate"
       : `El proximo que mueve es ${nextToMove}`;
 
   const updateMatchState = winner =>
-    updateNextToMoveText(winner) === "Empate" || winner
-      ? "Partida Finalizada"
-      : "Partida en Curso";
+    moves === 9 || winner ? `Partida Finalizada` : `Partida en Curso`;
 
   return (
     <View style={styles.container}>
