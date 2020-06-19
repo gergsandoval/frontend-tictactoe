@@ -10,11 +10,11 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
 
   const findMatch = () => {
     setSearching(true);
-    socket.emit("newQueueUser");
     socket.emit("findMatch", {
       googleId: gameInfo.googleId,
       name: gameInfo.name,
     });
+    socket.emit("newQueueUser");
     socket.on("matchFound", playToken => {
       setSearching(false);
       navigation.navigate("Game", {
