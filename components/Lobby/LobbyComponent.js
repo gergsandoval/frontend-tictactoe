@@ -1,10 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, { useCallback } from "react";
+import { View, StyleSheet, Text, BackHandler } from "react-native";
 import FirstRank from "./firstRank";
 import FindMatchButton from "./FindMatchButton";
 import Players from "./Players";
+import { useFocusEffect } from "@react-navigation/native";
 
 const LobbyComponent = ({ navigation, route }) => {
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true;
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.table}>

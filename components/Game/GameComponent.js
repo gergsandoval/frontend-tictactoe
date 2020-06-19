@@ -1,8 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useCallback } from "react";
+import { View, StyleSheet, BackHandler } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import Board from "./Board";
 
 const GameComponent = ({ route, navigation }) => {
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true;
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
       <Board
