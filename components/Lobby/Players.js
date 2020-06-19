@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, FlatList, View } from "react-native";
+import { StyleSheet, FlatList, View } from "react-native";
 import { List } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 import SocketContext from "../../socket-context";
