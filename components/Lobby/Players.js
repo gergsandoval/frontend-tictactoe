@@ -11,12 +11,14 @@ const Players = ({ navigation }) => {
   let [queueUsers, setQueueUsers] = useState([]);
 
   useEffect(() => {
-    socket.on("updateOnlineUsers", () => {
-      getOnlineUsers();
-    });
+    getOnlineUsers();
+    getQueueUsers();
 
-    socket.on("updateQueueUsers", () => {
-      getQueueUsers();
+    socket.on("updateOnlineUsers", data => {
+      setOnlineUsers(data);
+    });
+    socket.on("updateQueueUsers", data => {
+      setQueueUsers(data);
     });
 
     return () => {
@@ -26,7 +28,7 @@ const Players = ({ navigation }) => {
   }, []);
 
   const getOnlineUsers = () => {
-    fetch(`${herokuSocketRoute}${"onlineUsers"}`)
+    fetch(`${herokuSocketRoute}onlineUsers`)
       .then(response => response.json())
       .then(data => {
         setOnlineUsers(data);
@@ -34,7 +36,7 @@ const Players = ({ navigation }) => {
   };
 
   const getQueueUsers = () => {
-    fetch(`${herokuSocketRoute}${"queueUsers"}`)
+    fetch(`${herokuSocketRoute}queueUsers`)
       .then(response => response.json())
       .then(data => {
         setQueueUsers(data);
