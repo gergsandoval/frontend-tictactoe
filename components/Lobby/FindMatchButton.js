@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { TouchableHighlight } from "react-native";
 import { Button } from "react-native-paper";
 import SocketContext from "../../socket-context";
 import { herokuSocketRoute } from "../../socketRoute";
@@ -25,9 +26,15 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
   };
 
   return (
-    <Button icon="gamepad-variant" mode="contained" onPress={() => findMatch()}>
-      {searching ? "Cancelar Busqueda" : "Buscar Partida"}
-    </Button>
+    <TouchableHighlight onPress={() => findMatch()}>
+      <Button
+        icon="gamepad-variant"
+        mode="contained"
+        onPress={() => findMatch()}
+      >
+        {searching ? "Cancelar Busqueda" : "Buscar Partida"}
+      </Button>
+    </TouchableHighlight>
   );
 };
 export default FindMatchButton;
