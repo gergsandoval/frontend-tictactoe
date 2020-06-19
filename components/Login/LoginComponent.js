@@ -16,13 +16,7 @@ const LoginComponent = ({ navigation }) => {
       setGettingInfo(true);
       let cachedAuth = await getCachedAuthAsync();
       if (cachedAuth) {
-        const googleInfo = await getGoogleInfo(cachedAuth);
-        console.log("googleInfo: ", googleInfo);
-        const gameInfo = await getGameInfo(googleInfo);
-        console.log("gameInfo: ", gameInfo);
-        const onlineInfo = await getOnlineInfo(gameInfo);
-        console.log("onlineInfo: ", onlineInfo);
-        navigateToLobby(gameInfo);
+        await getInfoAndNavigateToLobby(cachedAuth);
       }
       setGettingInfo(false);
     };
@@ -33,13 +27,7 @@ const LoginComponent = ({ navigation }) => {
     setGettingInfo(true);
     if (Constants.deviceName != "Chrome") {
       const authState = await signInAsync();
-      const googleInfo = await getGoogleInfo(authState);
-      console.log("googleInfo: ", googleInfo);
-      const gameInfo = await getGameInfo(googleInfo);
-      console.log("gameInfo: ", gameInfo);
-      const onlineInfo = await getOnlineInfo(gameInfo);
-      console.log("onlineInfo: ", onlineInfo);
-      navigateToLobby(gameInfo);
+      await getInfoAndNavigateToLobby(authState);
     } else {
       navigateToLobby({
         googleId: "1234",
@@ -48,6 +36,17 @@ const LoginComponent = ({ navigation }) => {
       });
     }
     setGettingInfo(false);
+  };
+
+  const getInfoAndNavigateToLobby = async authState => {
+    const googleInfo = await getGoogleInfo(authState);
+    console.log("googleInfo: ", googleInfo);
+    const gameInfo = await getGameInfo(googleInfo);
+    console.log("gameInfo: ", gameInfo);
+    const onlineInfo = await getOnlineInfo(gameInfo);
+    console.log("onlineInfo: ", onlineInfo);
+    socket.emit("newUserOnline");
+    navigateToLobby(gameInfo);
   };
 
   const navigateToLobby = data => {

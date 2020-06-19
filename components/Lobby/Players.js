@@ -7,21 +7,23 @@ import SocketContext from "../../socket-context";
 const Players = ({ navigation }) => {
   const socket = React.useContext(SocketContext);
 
-  const onlineRef = useRef();
-  const queueRef = useRef();
-
   let [onlineUsers, setOnlineUsers] = useState([]);
   let [queueUsers, setQueueUsers] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    socket.on("updateOnlineUsers", () => {
       getOnlineUsers();
-      getQueueUsers();
-      onlineRef.current?.scrollTo({ y: 0, animated: true });
-      queueRef.current?.scrollTo({ y: 0, animated: true });
     });
-    return unsubscribe;
-  }, [navigation]);
+
+    socket.on("updateQueueUsers", () => {
+      getQueueUsers();
+    });
+
+    return () => {
+      socket.off("updateOnlineUsers");
+      socket.off("updateQueueUsers");
+    };
+  }, []);
 
   const getOnlineUsers = () => {
     fetch(`${herokuSocketRoute}${"onlineUsers"}`)
@@ -42,7 +44,7 @@ const Players = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.online}>
-        <ScrollView ref={onlineRef} style={styles.separator}>
+        <ScrollView style={styles.separator}>
           <List.Section
             titleStyle={styles.title}
             title={`Conectados (${onlineUsers.length})`}
@@ -54,7 +56,7 @@ const Players = ({ navigation }) => {
         </ScrollView>
       </View>
       <View style={styles.queue}>
-        <ScrollView ref={queueRef} style={styles.separator}>
+        <ScrollView style={styles.separator}>
           <List.Section
             titleStyle={styles.title}
             title={`En Cola (${queueUsers.length})`}
