@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, FlatList } from "react-native";
 import { DataTable } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 
@@ -15,38 +15,41 @@ const RankingComponent = () => {
       });
   };
   return (
-    <ScrollView>
-      <DataTable style={styles.tableContainer}>
-        <DataTable.Header>
-          <DataTable.Title style={styles.name}>Nombre</DataTable.Title>
-          <DataTable.Title style={styles.number} numeric>
-            G
-          </DataTable.Title>
-          <DataTable.Title style={styles.number} numeric>
-            E
-          </DataTable.Title>
-          <DataTable.Title style={styles.number} numeric>
-            P
-          </DataTable.Title>
-        </DataTable.Header>
-        {rankingInfo.map(({ _id, name, wins, ties, losses }) => (
-          <DataTable.Row key={_id}>
-            <DataTable.Cell style={styles.name}>{name}</DataTable.Cell>
+    <DataTable style={styles.tableContainer}>
+      <DataTable.Header>
+        <DataTable.Title style={styles.name}>Nombre</DataTable.Title>
+        <DataTable.Title style={styles.number} numeric>
+          G
+        </DataTable.Title>
+        <DataTable.Title style={styles.number} numeric>
+          E
+        </DataTable.Title>
+        <DataTable.Title style={styles.number} numeric>
+          P
+        </DataTable.Title>
+      </DataTable.Header>
+      <FlatList
+        data={rankingInfo}
+        renderItem={({ item }) => (
+          <DataTable.Row>
+            <DataTable.Cell style={styles.name}>{item.name}</DataTable.Cell>
             <DataTable.Cell style={styles.number} numeric>
-              {wins}
+              {item.wins}
             </DataTable.Cell>
             <DataTable.Cell style={styles.number} numeric>
-              {ties}
+              {item.ties}
             </DataTable.Cell>
-            <DataTable.Cell style={styles.lastNumber} numeric>
-              {losses}
+            <DataTable.Cell style={styles.number} numeric>
+              {item.losses}
             </DataTable.Cell>
           </DataTable.Row>
-        ))}
-      </DataTable>
-    </ScrollView>
+        )}
+        keyExtractor={item => item._id}
+      />
+    </DataTable>
   );
 };
+
 const styles = StyleSheet.create({
   tableContainer: {
     flex: 1,
@@ -58,18 +61,6 @@ const styles = StyleSheet.create({
   },
   number: {
     flex: 0.4,
-  },
-  lastNumber: {
-    flex: 0.4,
-  },
-  gold: {
-    backgroundColor: "gold",
-  },
-  silver: {
-    backgroundColor: "lightgray",
-  },
-  bronze: {
-    backgroundColor: "#CD7F32",
   },
 });
 
