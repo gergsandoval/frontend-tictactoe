@@ -9,11 +9,14 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
   const socket = React.useContext(SocketContext);
 
   const findMatch = () => {
+    setSearching(true);
+    socket.emit("newQueueUser");
     socket.emit("findMatch", {
       googleId: gameInfo.googleId,
-      name: gameInfo.name
+      name: gameInfo.name,
     });
     socket.on("matchFound", playToken => {
+      setSearching(false);
       navigation.navigate("Game", {
         playToken: playToken,
         gameInfo: gameInfo,
@@ -21,56 +24,8 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
     });
   };
 
-  const insertQueueUser = (gameInfo, socket) => {
-    fetch(`${herokuSocketRoute}queueUsers/`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        googleId: gameInfo.googleId,
-        name: gameInfo.name,
-        socket: socket.id,
-      }),
-    });
-  };
-
-  const isUserInQueue = (gameInfo, socket) => {
-    fetch(`${herokuSocketRoute}queueUsers/${gameInfo.googleId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.message === "cannot find queue user") {
-          insertQueueUser(gameInfo, socket);
-        }
-      });
-  };
-
-  const deleteQueueUser = ({ googleId }) => {
-    fetch(`${herokuSocketRoute}queueUsers/${googleId}`, { method: "DELETE" });
-    // .then(response => response.json())
-    // .then(data => data);
-  };
-
   return (
-    <Button
-      icon="gamepad-variant"
-      mode="contained"
-      onPress={() => findMatch()}
-      // onPress={
-      //   searching
-      //     ? () => {
-      //         deleteQueueUser(gameInfo);
-      //         setSearching(!searching);
-      //         cancelMatch();
-      //       }
-      //     : () => {
-      //         isUserInQueue(gameInfo, socket);
-      //         setSearching(!searching);
-      //         findMatch();
-      //       }
-      // }
-    >
+    <Button icon="gamepad-variant" mode="contained" onPress={() => findMatch()}>
       {searching ? "Cancelar Busqueda" : "Buscar Partida"}
     </Button>
   );
