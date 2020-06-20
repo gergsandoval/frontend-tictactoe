@@ -10,19 +10,24 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
   const socket = React.useContext(SocketContext);
 
   const findMatch = () => {
-    setSearching(true);
-    socket.emit("findMatch", {
-      googleId: gameInfo.googleId,
-      name: gameInfo.name,
-    });
-    socket.emit("newQueueUser");
-    socket.on("matchFound", playToken => {
+    if(searching){
       setSearching(false);
-      navigation.navigate("Game", {
-        playToken: playToken,
-        gameInfo: gameInfo,
+      socket.emit("cancelSearch");
+    }else{
+      setSearching(true);
+      socket.emit("findMatch", {
+        googleId: gameInfo.googleId,
+        name: gameInfo.name,
       });
-    });
+      socket.emit("newQueueUser");
+      socket.on("matchFound", playToken => {
+        setSearching(false);
+        navigation.navigate("Game", {
+          playToken: playToken,
+          gameInfo: gameInfo,
+        });
+      });
+    }
   };
 
   return (
