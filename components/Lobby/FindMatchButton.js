@@ -12,7 +12,7 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
   const findMatch = () => {
     if(searching){
       setSearching(false);
-      socket.emit("newQueueUser");
+      socket.emit("cancelSearch");
     }else{
       setSearching(true);
       socket.emit("findMatch", {
