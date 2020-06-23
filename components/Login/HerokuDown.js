@@ -5,26 +5,30 @@ import {
   Text,
   TouchableHighlight,
   View,
+  BackHandler,
 } from "react-native";
 
-const GameOverPopUp = ({ visible, navigation, gameInfo }) => {
+const HerokuDown = ({ herokuUp, googleCacheConnect }) => {
   return (
     <View style={styles.centeredView}>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={visible}
-        onRequestClose={() => null}
+        visible={!herokuUp}
+        onRequestClose={() => BackHandler.exitApp()}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              {`El mejor juego anticuarentena no esta disponible.\n Regresa mas tarde`}
+            </Text>
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
               onPress={() => {
-                navigation.navigate("Lobby", { gameInfo: gameInfo });
+                googleCacheConnect();
               }}
             >
-              <Text style={styles.textStyle}>La partida a finalizado!</Text>
+              <Text>Volver a conectar con el servidor</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -33,7 +37,7 @@ const GameOverPopUp = ({ visible, navigation, gameInfo }) => {
   );
 };
 
-export default GameOverPopUp;
+export default HerokuDown;
 
 const styles = StyleSheet.create({
   centeredView: {
