@@ -11,8 +11,13 @@ const config = {
 const GoogleToken = "GoogleToken";
 
 export async function signInAsync() {
-  let authState = await AppAuth.authAsync(config);
-  await cacheAuthAsync(authState);
+  let authState = null;
+  try {
+    authState = await AppAuth.authAsync(config);
+    await cacheAuthAsync(authState);
+  } catch (err) {
+    console.log(err.message);
+  }
   return authState;
 }
 
