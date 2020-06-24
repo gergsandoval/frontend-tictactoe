@@ -23,7 +23,7 @@ const LoginComponent = ({ navigation }) => {
     const statusHeroku = await isHerokuUp();
     setHerokuUp(statusHeroku);
     let cachedAuth = await getCachedAuthAsync();
-    if (statusHeroku && cachedAuth && Constants.isDevice) {
+    if (statusHeroku && cachedAuth) {
       await getInfoAndNavigateToLobby(cachedAuth);
     }
     setGettingInfo(false);
@@ -37,7 +37,7 @@ const LoginComponent = ({ navigation }) => {
     setGettingInfo(true);
     const statusHeroku = await isHerokuUp();
     setHerokuUp(statusHeroku);
-    if (statusHeroku && Constants.isDevice) {
+    if (statusHeroku) {
       const authState = await signInAsync();
       await getInfoAndNavigateToLobby(authState);
     }
