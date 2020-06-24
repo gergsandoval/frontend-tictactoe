@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Tic Tac Toe - Anti Cuarentena",
+    "name": "TicTacToe",
     "icon": "./assets/icon.png",
     "version": "1.0.0",
     "orientation": "portrait",
-    "slug": "your-app-slug",
+    "slug": "TicTacToe",
     "android": {
       "package": "com.nt2.tic.tac.toe",
       "versionCode": 100
