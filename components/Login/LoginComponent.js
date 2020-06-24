@@ -23,7 +23,7 @@ const LoginComponent = ({ navigation }) => {
     const statusHeroku = await isHerokuUp();
     setHerokuUp(statusHeroku);
     let cachedAuth = await getCachedAuthAsync();
-    if (statusHeroku && cachedAuth) {
+    if (statusHeroku && cachedAuth && Constants.isDevice) {
       await getInfoAndNavigateToLobby(cachedAuth);
     }
     setGettingInfo(false);
@@ -37,17 +37,9 @@ const LoginComponent = ({ navigation }) => {
     setGettingInfo(true);
     const statusHeroku = await isHerokuUp();
     setHerokuUp(statusHeroku);
-    if (statusHeroku) {
-      if (Constants.deviceName != "Chrome") {
-        const authState = await signInAsync();
-        await getInfoAndNavigateToLobby(authState);
-      } else {
-        navigateToLobby({
-          googleId: "1234",
-          name: "userWeb",
-          createdDate: new Date(),
-        });
-      }
+    if (statusHeroku && Constants.isDevice) {
+      const authState = await signInAsync();
+      await getInfoAndNavigateToLobby(authState);
     }
     setGettingInfo(false);
   };
