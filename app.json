@@ -1,28 +1,13 @@
 {
   "expo": {
-    "name": "frontend-tictactoe",
-    "slug": "frontend-tictactoe",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "name": "Tic Tac Toe - Anti Cuarentena",
+    "icon": "./assets/icon.png",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
+    "slug": "your-app-slug",
+    "android": {
+      "package": "com.nt2.tic.tac.toe",
+      "versionCode": 100
     }
   }
 }

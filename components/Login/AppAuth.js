@@ -6,6 +6,7 @@ const config = {
   scopes: ["openid", "profile"],
   clientId:
     "725377835616-jpcm8ei8a2q936jqk3980qk01el82gcu.apps.googleusercontent.com",
+  redirectUrl: "com.nt2.tic.tac.toe",
 };
 
 const GoogleToken = "GoogleToken";
