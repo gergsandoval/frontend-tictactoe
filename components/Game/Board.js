@@ -26,9 +26,6 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
     const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
     gameInfo = await updateRanking(gameInfo, method);
     console.log("updated GameInfo: ", gameInfo);
-    setTimeout(() => {
-      navigation.navigate("Lobby", { gameInfo: gameInfo });
-    }, 3000);
   };
 
   useEffect(() => {
