@@ -9,16 +9,16 @@ import {
 
 const GameOverPopUp = ({ visible, navigation, gameInfo }) => {
   const [seconds, setSeconds] = useState(5);
-  useEffect(() => startTimeout(), []);
-
-  const startTimeout = () => {
-    setTimeout(() => {
+  useEffect(() => {
+    let intervalId = setInterval(() => {
       setSeconds(seconds - 1);
       if (seconds === 0) {
         navigateToLobby(gameInfo);
       }
-    }, 1000);
-  };
+    });
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const navigateToLobby = data => {
     navigation.navigate("Lobby", { gameInfo: data });
@@ -35,7 +35,7 @@ const GameOverPopUp = ({ visible, navigation, gameInfo }) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              {`La partida ha finalizado. Volveras al Lobby en ${seconds}`}
+              {`La partida ha finalizado. \n Volveras al Lobby en ${seconds}`}
             </Text>
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
