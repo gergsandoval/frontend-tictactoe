@@ -38,16 +38,8 @@ const LoginComponent = ({ navigation }) => {
     const statusHeroku = await isHerokuUp();
     setHerokuUp(statusHeroku);
     if (statusHeroku) {
-      if (Constants.deviceName != "Chrome") {
-        const authState = await signInAsync();
-        await getInfoAndNavigateToLobby(authState);
-      } else {
-        navigateToLobby({
-          googleId: "1234",
-          name: "userWeb",
-          createdDate: new Date(),
-        });
-      }
+      const authState = await signInAsync();
+      await getInfoAndNavigateToLobby(authState);
     }
     setGettingInfo(false);
   };
