@@ -36,7 +36,6 @@ const GameOverPopUp = ({ visible, navigateToLobby }) => {
               icon="home"
               mode="contained"
               onPress={() => navigateToLobby()}
-              labelStyle={styles.text}
             >
               Volver al Lobby
             </Button>
@@ -76,9 +75,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-  },
-  textAlign: {
-    fontSize: 12,
   },
   modalText: {
     marginBottom: 15,
