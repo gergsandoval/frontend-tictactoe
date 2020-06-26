@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   StyleSheet,
@@ -6,8 +6,24 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
+import useInterval from "@use-it/interval";
 
-const GameOverPopUp = ({ visible, navigation, gameInfo }) => {
+const GameOverPopUp = ({ visible, navigateToLobby }) => {
+  const [seconds, setSeconds] = useState(5);
+
+  useInterval(
+    () => {
+      setSeconds(seconds - 1);
+    },
+    visible && seconds >= 0 ? 1000 : null
+  );
+
+  useEffect(() => {
+    if (seconds === 0) {
+      navigateToLobby();
+    }
+  }, [seconds]);
+
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -18,13 +34,14 @@ const GameOverPopUp = ({ visible, navigation, gameInfo }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              {`La partida ha finalizado. \n Volveras automaticamente al Lobby en ${seconds}`}
+            </Text>
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                navigation.navigate("Lobby", { gameInfo: gameInfo });
-              }}
+              onPress={() => navigateToLobby()}
             >
-              <Text style={styles.textStyle}>La partida a finalizado!</Text>
+              <Text>Volver al Lobby</Text>
             </TouchableHighlight>
           </View>
         </View>
