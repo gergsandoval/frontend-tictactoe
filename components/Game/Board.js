@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useIn } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Square from "./Square";
 import GameOverPopUp from "./GameOverPopUp";
@@ -75,12 +75,15 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
     );
   };
 
+  const navigateToLobby = () => {
+    navigation.navigate("Lobby", { gameInfo: gameInfo });
+  };
+
   const renderModal = () => {
     return (
       <GameOverPopUp
         visible={moves === 9 || winner != null}
-        navigation={navigation}
-        gameInfo={gameInfo}
+        navigateToLobby={() => navigateToLobby()}
       ></GameOverPopUp>
     );
   };

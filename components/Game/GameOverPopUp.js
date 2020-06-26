@@ -6,23 +6,23 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
+import useInterval from "@use-it/interval";
 
-const GameOverPopUp = ({ visible, navigation, gameInfo }) => {
+const GameOverPopUp = ({ visible, navigateToLobby }) => {
   const [seconds, setSeconds] = useState(5);
-  useEffect(() => {
-    let intervalId = setInterval(() => {
+
+  useInterval(
+    () => {
       setSeconds(seconds - 1);
-      if (seconds === 0) {
-        navigateToLobby(gameInfo);
-      }
-    });
+    },
+    visible && seconds >= 0 ? 1000 : null
+  );
 
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const navigateToLobby = data => {
-    navigation.navigate("Lobby", { gameInfo: data });
-  };
+  useEffect(() => {
+    if (seconds === 0) {
+      navigateToLobby();
+    }
+  }, [seconds]);
 
   return (
     <View style={styles.centeredView}>
@@ -35,11 +35,11 @@ const GameOverPopUp = ({ visible, navigation, gameInfo }) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              {`La partida ha finalizado. \n Volveras al Lobby en ${seconds}`}
+              {`La partida ha finalizado. \n Volveras automaticamente al Lobby en ${seconds}`}
             </Text>
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => navigateToLobby(gameInfo)}
+              onPress={() => navigateToLobby()}
             >
               <Text>Volver al Lobby</Text>
             </TouchableHighlight>
