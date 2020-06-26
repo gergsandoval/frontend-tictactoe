@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from "react-native";
+import { Modal, StyleSheet, Text, View } from "react-native";
+import { Button } from "react-native-paper";
 import useInterval from "@use-it/interval";
 
 const GameOverPopUp = ({ visible, navigateToLobby }) => {
@@ -37,12 +32,14 @@ const GameOverPopUp = ({ visible, navigateToLobby }) => {
             <Text style={styles.modalText}>
               {`La partida ha finalizado. \n Volveras automaticamente al Lobby en ${seconds}`}
             </Text>
-            <TouchableHighlight
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+            <Button
+              icon="home"
+              mode="contained"
               onPress={() => navigateToLobby()}
+              labelStyle={styles.text}
             >
-              <Text>Volver al Lobby</Text>
-            </TouchableHighlight>
+              Volver al Lobby
+            </Button>
           </View>
         </View>
       </Modal>
@@ -80,10 +77,8 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
   },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+  textAlign: {
+    fontSize: 12,
   },
   modalText: {
     marginBottom: 15,
