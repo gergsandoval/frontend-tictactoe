@@ -22,7 +22,7 @@ const LobbyComponent = ({ navigation, route }) => {
       <View style={styles.table}>
         <FirstRank navigation={navigation} />
       </View>
-      <View style={styles.ranking}>
+      <View style={styles.button}>
         <RankingButton navigation={navigation} />
       </View>
       <View style={styles.players}>
@@ -47,9 +47,6 @@ const styles = StyleSheet.create({
   },
   table: {
     flex: 0.15,
-  },
-  ranking: {
-    flex: 0.1,
   },
   button: {
     flex: 0.1,
