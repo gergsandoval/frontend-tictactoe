@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { TouchableHighlight } from "react-native";
+import { TouchableHighlight, View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import SocketContext from "../../socket-context";
-import { herokuSocketRoute } from "../../socketRoute";
 
 const FindMatchButton = ({ navigation, gameInfo }) => {
   const [searching, setSearching] = useState(false);
@@ -10,10 +9,10 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
   const socket = React.useContext(SocketContext);
 
   const findMatch = () => {
-    if(searching){
+    if (searching) {
       setSearching(false);
       socket.emit("cancelSearch");
-    }else{
+    } else {
       setSearching(true);
       socket.emit("findMatch", {
         googleId: gameInfo.googleId,
@@ -36,6 +35,8 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
         icon="gamepad-variant"
         mode="contained"
         onPress={() => findMatch()}
+        contentStyle={styles.button}
+        labelStyle={styles.text}
       >
         {searching ? "Cancelar Busqueda" : "Buscar Partida"}
       </Button>
@@ -43,3 +44,13 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
   );
 };
 export default FindMatchButton;
+
+const styles = StyleSheet.create({
+  button: {
+    width: "100%",
+    height: "100%",
+  },
+  text: {
+    fontSize: 18,
+  },
+});

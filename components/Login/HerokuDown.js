@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-  BackHandler,
-} from "react-native";
+import { Modal, StyleSheet, Text, View, BackHandler } from "react-native";
+import { Button } from "react-native-paper";
 
-const HerokuDown = ({ herokuUp, googleCacheConnect }) => {
+const HerokuDown = ({ herokuUp, googleCacheConnect, gettingInfo }) => {
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -22,14 +16,17 @@ const HerokuDown = ({ herokuUp, googleCacheConnect }) => {
             <Text style={styles.modalText}>
               {`El mejor juego anticuarentena no esta disponible.\n Regresa mas tarde`}
             </Text>
-            <TouchableHighlight
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                googleCacheConnect();
-              }}
+            <Button
+              icon={gettingInfo ? "refresh" : null}
+              mode="contained"
+              disabled={gettingInfo}
+              onPress={() => googleCacheConnect()}
+              labelStyle={styles.text}
             >
-              <Text>Volver a conectar con el servidor</Text>
-            </TouchableHighlight>
+              {gettingInfo
+                ? "Conectando con el servidor"
+                : "Volver a conectar con el servidor"}
+            </Button>
           </View>
         </View>
       </Modal>
@@ -61,16 +58,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+  text: {
+    fontSize: 12,
   },
   modalText: {
     marginBottom: 15,

@@ -2,7 +2,6 @@ import * as React from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { DataTable, Button } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
-import RankingButton from "./RankingButton";
 
 const FirstRank = ({ navigation }) => {
   let [firstRankInfo, setFirstRankInfo] = React.useState([]);
@@ -57,9 +56,6 @@ const FirstRank = ({ navigation }) => {
             </DataTable.Row>
           ))}
         </DataTable>
-      </View>
-      <View>
-        <RankingButton navigation={navigation} />
       </View>
     </>
   );
