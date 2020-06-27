@@ -57,7 +57,7 @@ const LoginComponent = ({ navigation }) => {
     try {
       const googleInfo = await getGoogleInfo(authState);
       console.log("googleInfo: ", googleInfo);
-      const gameInfo = await getGameInfo(googleInfo, authState.accessToken);
+      const gameInfo = await getGameInfo(googleInfo);
       console.log("gameInfo: ", gameInfo);
       const onlineInfo = await getOnlineInfo(gameInfo);
       console.log("onlineInfo: ", onlineInfo);
@@ -89,7 +89,7 @@ const LoginComponent = ({ navigation }) => {
     navigation.navigate("Lobby", { gameInfo: data });
   };
 
-  const getGameInfo = ({ id, name }, token) => {
+  const getGameInfo = ({ id, name }) => {
     return fetch(`${herokuSocketRoute}users/`, {
       method: "POST",
       headers: {
@@ -99,8 +99,7 @@ const LoginComponent = ({ navigation }) => {
       body: JSON.stringify({
         googleId: id,
         name: name,
-        createdDate: new Date(),
-        token: token
+        createdDate: new Date()
       }),
     })
       .then(response => response.json())
