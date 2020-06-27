@@ -8,6 +8,7 @@ import { herokuSocketRoute } from "../../socketRoute";
 import SocketContext from "../../socket-context";
 import HerokuDown from "./HerokuDown";
 import Loading from "./Loading";
+import Logo from "./Logo";
 
 const LoginComponent = ({ navigation }) => {
   const socket = React.useContext(SocketContext);
@@ -108,6 +109,7 @@ const LoginComponent = ({ navigation }) => {
   const renderModal = () => (
     <HerokuDown
       herokuUp={herokuUp}
+      gettingInfo={gettingInfo}
       googleCacheConnect={() => googleCacheConnect()}
     />
   );
@@ -115,14 +117,19 @@ const LoginComponent = ({ navigation }) => {
   const renderSpinner = () => <Loading gettingInfo={gettingInfo} />;
 
   return (
-    <View style={styles.ButtonContainer}>
-      <View style={styles.modal}>{renderModal()}</View>
-      <View>{renderSpinner()}</View>
-      <LoginButton
-        disabled={gettingInfo || herokuUp === false}
-        signIn={() => googleConnect()}
-      />
-      <ExitButton disabled={gettingInfo || herokuUp === false} />
+    <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Logo herokuUp={herokuUp} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <View style={styles.modal}>{renderModal()}</View>
+        <View>{renderSpinner()}</View>
+        <LoginButton
+          disabled={gettingInfo || herokuUp === false}
+          signIn={() => googleConnect()}
+        />
+        <ExitButton disabled={gettingInfo || herokuUp === false} />
+      </View>
     </View>
   );
 };
@@ -130,10 +137,17 @@ const LoginComponent = ({ navigation }) => {
 export default LoginComponent;
 
 const styles = StyleSheet.create({
-  ButtonContainer: {
+  container: {
+    flexDirection: "column",
     flex: 1,
+  },
+  buttonContainer: {
+    flex: 0.25,
     alignItems: "center",
     justifyContent: "flex-end",
+  },
+  logoContainer: {
+    flex: 0.75,
   },
   modal: {
     height: 1,

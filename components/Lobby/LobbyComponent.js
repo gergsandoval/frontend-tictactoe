@@ -4,6 +4,7 @@ import FirstRank from "./firstRank";
 import FindMatchButton from "./FindMatchButton";
 import Players from "./Players";
 import { useFocusEffect } from "@react-navigation/native";
+import RankingButton from "./RankingButton";
 
 const LobbyComponent = ({ navigation, route }) => {
   useFocusEffect(
@@ -20,6 +21,9 @@ const LobbyComponent = ({ navigation, route }) => {
     <View style={styles.container}>
       <View style={styles.table}>
         <FirstRank navigation={navigation} />
+      </View>
+      <View style={styles.button}>
+        <RankingButton navigation={navigation} />
       </View>
       <View style={styles.players}>
         <Players navigation={navigation} />
@@ -42,12 +46,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   table: {
-    flex: 0.25,
+    flex: 0.15,
   },
   button: {
     flex: 0.1,
   },
   players: {
-    flex: 0.7,
+    flex: 0.65,
   },
 });
