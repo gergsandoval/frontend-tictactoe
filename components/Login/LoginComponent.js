@@ -56,22 +56,39 @@ const LoginComponent = ({ navigation }) => {
     try {
       const googleInfo = await getGoogleInfo(authState);
       console.log("googleInfo: ", googleInfo);
-      const gameInfo = await getGameInfo(googleInfo);
+      const gameInfo = await getGameInfo(googleInfo, authState.accessToken);
       console.log("gameInfo: ", gameInfo);
       const onlineInfo = await getOnlineInfo(gameInfo);
       console.log("onlineInfo: ", onlineInfo);
       socket.emit("newUserOnline");
+      registerToken(authState.accessToken, gameInfo.googleId)
       navigateToLobby(gameInfo);
     } catch (err) {
       console.log(err.message);
     }
   };
 
+  async function registerToken(token, id){
+    await fetch(`${herokuSocketRoute}users/register-token/${id}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token
+      }),
+    })
+      .then(response => response.json())
+      .then(data => data);
+  };
+  
+
   const navigateToLobby = data => {
     navigation.navigate("Lobby", { gameInfo: data });
   };
 
-  const getGameInfo = ({ id, name }) => {
+  const getGameInfo = ({ id, name }, token) => {
     return fetch(`${herokuSocketRoute}users/`, {
       method: "POST",
       headers: {
@@ -82,6 +99,7 @@ const LoginComponent = ({ navigation }) => {
         googleId: id,
         name: name,
         createdDate: new Date(),
+        token: token
       }),
     })
       .then(response => response.json())
