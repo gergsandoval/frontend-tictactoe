@@ -3,12 +3,16 @@ import { StyleSheet, FlatList } from "react-native";
 import { DataTable } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 
-const RankingComponent = () => {
+const RankingComponent = ({ gameInfo }) => {
   let [rankingInfo, setRankingInfo] = React.useState([]);
-  React.useEffect(() => getRanking(), []);
+  React.useEffect(() => getRanking(gameInfo), []);
 
-  const getRanking = () => {
-    fetch(`${herokuSocketRoute}${"ranking"}`)
+  const getRanking = ({ token }) => {
+    fetch(`${herokuSocketRoute}${"ranking"}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => {
         setRankingInfo(data);

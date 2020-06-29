@@ -4,15 +4,15 @@ import { List } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 import SocketContext from "../../socket-context";
 
-const Players = ({ navigation }) => {
+const Players = ({ navigation, gameInfo }) => {
   const socket = React.useContext(SocketContext);
 
   let [onlineUsers, setOnlineUsers] = useState([]);
   let [queueUsers, setQueueUsers] = useState([]);
 
   useEffect(() => {
-    getOnlineUsers();
-    getQueueUsers();
+    getOnlineUsers(gameInfo);
+    getQueueUsers(gameInfo);
 
     socket.on("updateOnlineUsers", data => {
       setOnlineUsers(data);
@@ -27,18 +27,28 @@ const Players = ({ navigation }) => {
     };
   }, []);
 
-  const getOnlineUsers = () => {
-    fetch(`${herokuSocketRoute}onlineUsers`)
+  const getOnlineUsers = ({ token }) => {
+    fetch(`${herokuSocketRoute}onlineUsers`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => {
+        console.log("onlineUsers: ", data);
         setOnlineUsers(data);
       });
   };
 
-  const getQueueUsers = () => {
-    fetch(`${herokuSocketRoute}queueUsers`)
+  const getQueueUsers = ({ token }) => {
+    fetch(`${herokuSocketRoute}queueUsers`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => {
+        console.log("queueUsers: ", data);
         setQueueUsers(data);
       });
   };

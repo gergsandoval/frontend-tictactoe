@@ -59,31 +59,34 @@ const LoginComponent = ({ navigation }) => {
       console.log("googleInfo: ", googleInfo);
       const gameInfo = await getGameInfo(googleInfo);
       console.log("gameInfo: ", gameInfo);
+      const token = await registerToken(
+        authState.accessToken,
+        gameInfo.googleId
+      );
+      console.log("TOKEN: ", token);
       const onlineInfo = await getOnlineInfo(gameInfo);
       console.log("onlineInfo: ", onlineInfo);
       socket.emit("newUserOnline");
-      registerToken(authState.accessToken, gameInfo.googleId)
       navigateToLobby(gameInfo);
     } catch (err) {
       console.log(err.message);
     }
   };
 
-  async function registerToken(token, id){
-    await fetch(`${herokuSocketRoute}users/register-token/${id}`, {
+  async function registerToken(token, id) {
+    return fetch(`${herokuSocketRoute}users/register-token/${id}`, {
       method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        token: token
+        token: token,
       }),
     })
       .then(response => response.json())
       .then(data => data);
-  };
-  
+  }
 
   const navigateToLobby = data => {
     navigation.navigate("Lobby", { gameInfo: data });
@@ -99,19 +102,20 @@ const LoginComponent = ({ navigation }) => {
       body: JSON.stringify({
         googleId: id,
         name: name,
-        createdDate: new Date()
+        createdDate: new Date(),
       }),
     })
       .then(response => response.json())
       .then(data => data);
   };
 
-  const getOnlineInfo = ({ googleId, name }) => {
+  const getOnlineInfo = ({ googleId, name, token }) => {
     return fetch(`${herokuSocketRoute}onlineUsers/`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         googleId: googleId,

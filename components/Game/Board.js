@@ -38,18 +38,16 @@ const Board = ({ playtoken, navigation, gameInfo }) => {
     };
   }, []);
 
-  const updateRanking = (gameInfo, method) => {
-    return fetch(
-      `${herokuSocketRoute}users/update${method}/${gameInfo.googleId}`,
-      {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(gameInfo),
-      }
-    )
+  const updateRanking = ({ googleId, token }, method) => {
+    return fetch(`${herokuSocketRoute}users/update${method}/${googleId}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(gameInfo),
+    })
       .then(response => response.json())
       .then(data => data);
   };
