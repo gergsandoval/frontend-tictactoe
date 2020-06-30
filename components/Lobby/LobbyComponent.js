@@ -7,7 +7,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import RankingButton from "./RankingButton";
 
 const LobbyComponent = ({ navigation, route }) => {
-  console.log("gameInfo llego al lobby: ", route.params.gameInfo);
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => true;

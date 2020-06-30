@@ -14,7 +14,7 @@ const FirstRank = ({ navigation, gameInfo }) => {
   }, [navigation]);
 
   const getRankOne = ({ token }) => {
-    fetch(`${herokuSocketRoute}${"ranking/getRankOne"}`, {
+    fetch(`${herokuSocketRoute}api/ranking/getRankOne`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
