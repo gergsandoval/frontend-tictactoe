@@ -1,28 +1,13 @@
 {
   "expo": {
-    "name": "frontend-tictactoe",
-    "slug": "frontend-tictactoe",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "1.0.0",
-    "orientation": "portrait",
+    "name": "TicTacToe",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
+    "version": "1.0.2",
+    "orientation": "portrait",
+    "slug": "TicTacToe",
+    "android": {
+      "package": "com.nt2.tic.tac.toe",
+      "versionCode": 102
     }
   }
 }
