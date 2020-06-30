@@ -8,7 +8,7 @@ const RankingComponent = ({ route }) => {
   React.useEffect(() => getRanking(route.params.gameInfo), []);
 
   const getRanking = ({ token }) => {
-    fetch(`${herokuSocketRoute}${"ranking"}`, {
+    fetch(`${herokuSocketRoute}api/ranking`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

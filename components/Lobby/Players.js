@@ -28,7 +28,7 @@ const Players = ({ navigation, gameInfo }) => {
   }, []);
 
   const getOnlineUsers = ({ token }) => {
-    fetch(`${herokuSocketRoute}onlineUsers`, {
+    fetch(`${herokuSocketRoute}api/onlineUsers`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -40,7 +40,7 @@ const Players = ({ navigation, gameInfo }) => {
   };
 
   const getQueueUsers = ({ token }) => {
-    fetch(`${herokuSocketRoute}queueUsers`, {
+    fetch(`${herokuSocketRoute}api/queueUsers`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
