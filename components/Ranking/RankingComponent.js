@@ -3,9 +3,9 @@ import { StyleSheet, FlatList } from "react-native";
 import { DataTable } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 
-const RankingComponent = ({ gameInfo }) => {
+const RankingComponent = ({ route }) => {
   let [rankingInfo, setRankingInfo] = React.useState([]);
-  React.useEffect(() => getRanking(gameInfo), []);
+  React.useEffect(() => getRanking(route.params.gameInfo), []);
 
   const getRanking = ({ token }) => {
     fetch(`${herokuSocketRoute}${"ranking"}`, {

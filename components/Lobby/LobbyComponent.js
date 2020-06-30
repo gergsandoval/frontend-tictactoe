@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { View, StyleSheet, Text, BackHandler } from "react-native";
+import { View, StyleSheet, BackHandler } from "react-native";
 import FirstRank from "./firstRank";
 import FindMatchButton from "./FindMatchButton";
 import Players from "./Players";
@@ -7,6 +7,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import RankingButton from "./RankingButton";
 
 const LobbyComponent = ({ navigation, route }) => {
+  console.log("gameInfo llego al lobby: ", route.params.gameInfo);
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => true;

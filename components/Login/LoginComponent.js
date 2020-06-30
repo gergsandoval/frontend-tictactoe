@@ -56,14 +56,10 @@ const LoginComponent = ({ navigation }) => {
   const getInfoAndNavigateToLobby = async authState => {
     try {
       const googleInfo = await getGoogleInfo(authState);
-      console.log("googleInfo: ", googleInfo);
-      const gameInfo = await getGameInfo(googleInfo);
-      console.log("gameInfo: ", gameInfo);
-      const token = await registerToken(
-        authState.accessToken,
-        gameInfo.googleId
-      );
-      console.log("TOKEN: ", token);
+      let gameInfo = await getGameInfo(googleInfo);
+      console.log("oldGameInfo: ", gameInfo);
+      gameInfo = await registerToken(authState, gameInfo);
+      console.log("newGameInfo: ", gameInfo);
       const onlineInfo = await getOnlineInfo(gameInfo);
       console.log("onlineInfo: ", onlineInfo);
       socket.emit("newUserOnline");
@@ -73,15 +69,15 @@ const LoginComponent = ({ navigation }) => {
     }
   };
 
-  async function registerToken(token, id) {
-    return fetch(`${herokuSocketRoute}users/register-token/${id}`, {
+  async function registerToken({ accessToken }, { googleId }) {
+    return fetch(`${herokuSocketRoute}users/register-token/${googleId}`, {
       method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        token: token,
+        token: accessToken,
       }),
     })
       .then(response => response.json())

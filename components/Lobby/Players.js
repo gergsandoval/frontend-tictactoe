@@ -35,7 +35,6 @@ const Players = ({ navigation, gameInfo }) => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log("onlineUsers: ", data);
         setOnlineUsers(data);
       });
   };
@@ -48,7 +47,6 @@ const Players = ({ navigation, gameInfo }) => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log("queueUsers: ", data);
         setQueueUsers(data);
       });
   };
