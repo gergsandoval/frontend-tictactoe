@@ -2,12 +2,12 @@
   "expo": {
     "name": "TicTacToe",
     "icon": "./assets/icon.png",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "slug": "TicTacToe",
     "android": {
       "package": "com.nt2.tic.tac.toe",
-      "versionCode": 102
+      "versionCode": 103
     }
   }
 }
