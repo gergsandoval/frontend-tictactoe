@@ -56,34 +56,33 @@ const LoginComponent = ({ navigation }) => {
   const getInfoAndNavigateToLobby = async authState => {
     try {
       const googleInfo = await getGoogleInfo(authState);
-      console.log("googleInfo: ", googleInfo);
-      const gameInfo = await getGameInfo(googleInfo);
-      console.log("gameInfo: ", gameInfo);
+      let gameInfo = await getGameInfo(googleInfo);
+      console.log("oldGameInfo: ", gameInfo);
+      gameInfo = await registerToken(authState, gameInfo);
+      console.log("newGameInfo: ", gameInfo);
       const onlineInfo = await getOnlineInfo(gameInfo);
       console.log("onlineInfo: ", onlineInfo);
       socket.emit("newUserOnline");
-      registerToken(authState.accessToken, gameInfo.googleId)
       navigateToLobby(gameInfo);
     } catch (err) {
       console.log(err.message);
     }
   };
 
-  async function registerToken(token, id){
-    await fetch(`${herokuSocketRoute}users/register-token/${id}`, {
+  async function registerToken({ accessToken }, { googleId }) {
+    return fetch(`${herokuSocketRoute}users/register-token/${googleId}`, {
       method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        token: token
+        token: accessToken,
       }),
     })
       .then(response => response.json())
       .then(data => data);
-  };
-  
+  }
 
   const navigateToLobby = data => {
     navigation.navigate("Lobby", { gameInfo: data });
@@ -99,19 +98,20 @@ const LoginComponent = ({ navigation }) => {
       body: JSON.stringify({
         googleId: id,
         name: name,
-        createdDate: new Date()
+        createdDate: new Date(),
       }),
     })
       .then(response => response.json())
       .then(data => data);
   };
 
-  const getOnlineInfo = ({ googleId, name }) => {
+  const getOnlineInfo = ({ googleId, name, token }) => {
     return fetch(`${herokuSocketRoute}onlineUsers/`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         googleId: googleId,

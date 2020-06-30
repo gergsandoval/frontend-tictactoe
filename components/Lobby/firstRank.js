@@ -3,18 +3,22 @@ import { View, StyleSheet, Image } from "react-native";
 import { DataTable, Button } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 
-const FirstRank = ({ navigation }) => {
+const FirstRank = ({ navigation, gameInfo }) => {
   let [firstRankInfo, setFirstRankInfo] = React.useState([]);
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getRankOne();
+      getRankOne(gameInfo);
     });
     return unsubscribe;
   }, [navigation]);
 
-  const getRankOne = () => {
-    fetch(`${herokuSocketRoute}${"ranking/getRankOne"}`)
+  const getRankOne = ({ token }) => {
+    fetch(`${herokuSocketRoute}${"ranking/getRankOne"}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => {
         setFirstRankInfo(data);

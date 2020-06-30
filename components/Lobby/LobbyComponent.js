@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { View, StyleSheet, Text, BackHandler } from "react-native";
+import { View, StyleSheet, BackHandler } from "react-native";
 import FirstRank from "./firstRank";
 import FindMatchButton from "./FindMatchButton";
 import Players from "./Players";
@@ -7,6 +7,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import RankingButton from "./RankingButton";
 
 const LobbyComponent = ({ navigation, route }) => {
+  console.log("gameInfo llego al lobby: ", route.params.gameInfo);
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => true;
@@ -20,13 +21,16 @@ const LobbyComponent = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.table}>
-        <FirstRank navigation={navigation} />
+        <FirstRank navigation={navigation} gameInfo={route.params.gameInfo} />
       </View>
       <View style={styles.button}>
-        <RankingButton navigation={navigation} />
+        <RankingButton
+          navigation={navigation}
+          gameInfo={route.params.gameInfo}
+        />
       </View>
       <View style={styles.players}>
-        <Players navigation={navigation} />
+        <Players navigation={navigation} gameInfo={route.params.gameInfo} />
       </View>
       <View style={styles.button}>
         <FindMatchButton
