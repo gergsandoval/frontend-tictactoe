@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
 import { signInAsync, getCachedAuthAsync, getGoogleInfo } from "./AppAuth";
+import { setGoogleId, setToken } from "../Storage";
 import Constants from "expo-constants";
 import { herokuSocketRoute } from "../../socketRoute";
 import SocketContext from "../../socket-context";
@@ -60,7 +61,7 @@ const LoginComponent = ({ navigation }) => {
       gameInfo = await registerToken(authState, gameInfo);
       const onlineInfo = await getOnlineInfo(gameInfo);
       socket.emit("newUserOnline");
-      navigateToLobby(gameInfo);
+      navigateToLobby();
     } catch (err) {
       console.log(err.message);
     }
@@ -78,11 +79,15 @@ const LoginComponent = ({ navigation }) => {
       }),
     })
       .then(response => response.json())
-      .then(data => data);
+      .then(data => {
+        setGoogleId(data.googleId);
+        setToken(data.token);
+        return data;
+      });
   }
 
   const navigateToLobby = data => {
-    navigation.navigate("Lobby", { gameInfo: data });
+    navigation.navigate("Lobby");
   };
 
   const getGameInfo = ({ id, name }) => {

@@ -3,17 +3,15 @@ import { StyleSheet, FlatList, View } from "react-native";
 import { List } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 import SocketContext from "../../socket-context";
+import { getToken } from "../Storage";
 
-const Players = ({ navigation, gameInfo }) => {
+const Players = ({ navigation }) => {
   const socket = React.useContext(SocketContext);
 
   let [onlineUsers, setOnlineUsers] = useState([]);
   let [queueUsers, setQueueUsers] = useState([]);
 
   useEffect(() => {
-    getOnlineUsers(gameInfo);
-    getQueueUsers(gameInfo);
-
     socket.on("updateOnlineUsers", data => {
       setOnlineUsers(data);
     });
@@ -27,7 +25,16 @@ const Players = ({ navigation, gameInfo }) => {
     };
   }, []);
 
-  const getOnlineUsers = ({ token }) => {
+  useEffect(() => {
+    const token = await getToken();
+    const unsubscribe = navigation.addListener("focus", () => {
+      getOnlineUsers(token);
+      getQueueUsers(token);
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const getOnlineUsers = token => {
     fetch(`${herokuSocketRoute}api/onlineUsers`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -39,7 +46,7 @@ const Players = ({ navigation, gameInfo }) => {
       });
   };
 
-  const getQueueUsers = ({ token }) => {
+  const getQueueUsers = token => {
     fetch(`${herokuSocketRoute}api/queueUsers`, {
       headers: {
         Authorization: `Bearer ${token}`,
