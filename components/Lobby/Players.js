@@ -26,15 +26,15 @@ const Players = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    const token = await getToken();
     const unsubscribe = navigation.addListener("focus", () => {
-      getOnlineUsers(token);
-      getQueueUsers(token);
+      getOnlineUsers();
+      getQueueUsers();
     });
     return unsubscribe;
   }, [navigation]);
 
-  const getOnlineUsers = token => {
+  const getOnlineUsers = async () => {
+    const token = await getToken();
     fetch(`${herokuSocketRoute}api/onlineUsers`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,7 +46,8 @@ const Players = ({ navigation }) => {
       });
   };
 
-  const getQueueUsers = token => {
+  const getQueueUsers = async () => {
+    const token = await getToken();
     fetch(`${herokuSocketRoute}api/queueUsers`, {
       headers: {
         Authorization: `Bearer ${token}`,

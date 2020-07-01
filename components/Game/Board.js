@@ -23,8 +23,6 @@ const Board = ({ token, navigation }) => {
   const matchEnded = async winner => {
     setWinner(winner);
     const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
-    const googleId = await getGoogleId();
-    const token = await getToken();
     await updateRanking(googleId, token, method);
   };
 
@@ -38,8 +36,10 @@ const Board = ({ token, navigation }) => {
     };
   }, []);
 
-  const updateRanking = (googleId, token, method) => {
-    return fetch(`${herokuSocketRoute}api/users/${googleId}/update${method}`, {
+  const updateRanking = method => {
+    const googleId = await getGoogleId();
+    const token = await getToken();
+    fetch(`${herokuSocketRoute}api/users/${googleId}/update${method}`, {
       method: "PUT",
       headers: {
         Accept: "application/json",

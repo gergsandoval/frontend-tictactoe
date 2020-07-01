@@ -8,14 +8,14 @@ const FirstRank = ({ navigation }) => {
   let [firstRankInfo, setFirstRankInfo] = React.useState([]);
 
   useEffect(() => {
-    const token = getToken();
     const unsubscribe = navigation.addListener("focus", () => {
-      getRankOne(token);
+      getRankOne();
     });
     return unsubscribe;
   }, [navigation]);
 
-  const getRankOne = token => {
+  const getRankOne = async () => {
+    const token = await getToken();
     fetch(`${herokuSocketRoute}api/ranking/getRankOne`, {
       headers: {
         Authorization: `Bearer ${token}`,

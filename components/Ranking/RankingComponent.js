@@ -5,12 +5,10 @@ import { herokuSocketRoute } from "../../socketRoute";
 import { getToken } from "../Storage";
 const RankingComponent = () => {
   let [rankingInfo, setRankingInfo] = React.useState([]);
-  React.useEffect(() => {
-    const token = getToken();
-    getRanking(token);
-  }, []);
+  React.useEffect(() => getRanking(), []);
 
-  const getRanking = token => {
+  const getRanking = async () => {
+    const token = await getToken();
     fetch(`${herokuSocketRoute}api/ranking`, {
       headers: {
         Authorization: `Bearer ${token}`,
