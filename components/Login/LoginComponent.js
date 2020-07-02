@@ -4,7 +4,6 @@ import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
 import { signInAsync, getCachedAuthAsync, getGoogleInfo } from "./AppAuth";
 import { setGoogleId, setToken } from "../Storage";
-import Constants from "expo-constants";
 import { herokuSocketRoute } from "../../socketRoute";
 import SocketContext from "../../socket-context";
 import HerokuDown from "./HerokuDown";
