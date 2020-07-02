@@ -16,15 +16,13 @@ const FirstRank = ({ navigation }) => {
 
   const getRankOne = async () => {
     const token = await getToken();
-    fetch(`${herokuSocketRoute}api/ranking/getRankOne`, {
+    const response = await fetch(`${herokuSocketRoute}api/ranking/getRankOne`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
-      .then(response => response.json())
-      .then(data => {
-        setFirstRankInfo(data);
-      });
+    });
+    const data = await response.json();
+    setFirstRankInfo(data);
   };
 
   return (

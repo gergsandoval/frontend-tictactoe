@@ -35,28 +35,24 @@ const Players = ({ navigation }) => {
 
   const getOnlineUsers = async () => {
     const token = await getToken();
-    fetch(`${herokuSocketRoute}api/onlineUsers`, {
+    const response = await fetch(`${herokuSocketRoute}api/onlineUsers`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
-      .then(response => response.json())
-      .then(data => {
-        setOnlineUsers(data);
-      });
+    });
+    const data = await response.json();
+    setOnlineUsers(data);
   };
 
   const getQueueUsers = async () => {
     const token = await getToken();
-    fetch(`${herokuSocketRoute}api/queueUsers`, {
+    const response = await fetch(`${herokuSocketRoute}api/queueUsers`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
-      .then(response => response.json())
-      .then(data => {
-        setQueueUsers(data);
-      });
+    });
+    const data = await response.json();
+    setQueueUsers(data);
   };
 
   return (

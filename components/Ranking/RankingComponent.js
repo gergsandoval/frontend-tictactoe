@@ -11,16 +11,15 @@ const RankingComponent = () => {
 
   const getRanking = async () => {
     const token = await getToken();
-    fetch(`${herokuSocketRoute}api/ranking`, {
+    const response = await fetch(`${herokuSocketRoute}api/ranking`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
-      .then(response => response.json())
-      .then(data => {
-        setRankingInfo(data);
-      });
+    });
+    const data = await response.json();
+    setRankingInfo(data);
   };
+
   return (
     <DataTable style={styles.tableContainer}>
       <DataTable.Header>
