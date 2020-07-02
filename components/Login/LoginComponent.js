@@ -22,44 +22,36 @@ const LoginComponent = ({ navigation }) => {
 
   const googleCacheConnect = async () => {
     setGettingInfo(true);
-    const statusHeroku = await isHerokuUp();
-    setHerokuUp(statusHeroku);
+    isHerokuUp();
     let cachedAuth = await getCachedAuthAsync();
-    if (statusHeroku && cachedAuth) {
+    if (herokuUp && cachedAuth) {
       await getInfoAndNavigateToLobby(cachedAuth);
     }
     setGettingInfo(false);
   };
 
-  const isHerokuUp = () => {
-    return fetch(herokuSocketRoute).then(response => response.status === 200);
+  const isHerokuUp = async () => {
+    const response = await fetch(herokuSocketRoute);
+    setHerokuUp(response.status === 200);
   };
 
   const googleConnect = async () => {
     setGettingInfo(true);
-    const statusHeroku = await isHerokuUp();
-    setHerokuUp(statusHeroku);
-    if (statusHeroku) {
-      if (Constants.deviceName != "Chrome") {
-        const authState = await signInAsync();
-        await getInfoAndNavigateToLobby(authState);
-      } else {
-        navigateToLobby({
-          googleId: "1234",
-          name: "userWeb",
-          createdDate: new Date(),
-        });
-      }
+    isHerokuUp();
+    if (herokuUp) {
+      const authState = await signInAsync();
+      await getInfoAndNavigateToLobby(authState);
     }
     setGettingInfo(false);
   };
 
   const getInfoAndNavigateToLobby = async authState => {
     try {
-      const googleInfo = await getGoogleInfo(authState);
-      let gameInfo = await getGameInfo(googleInfo);
-      gameInfo = await registerToken(authState, gameInfo);
-      const onlineInfo = await getOnlineInfo(gameInfo);
+      const { accessToken } = authState;
+      const { id, name, picture } = await getGoogleInfo(accessToken);
+      await getGameInfo(id, name);
+      await refreshToken(id, accessToken);
+      await getOnlineInfo(id, name, accessToken);
       socket.emit("newUserOnline");
       navigateToLobby();
     } catch (err) {
@@ -67,48 +59,46 @@ const LoginComponent = ({ navigation }) => {
     }
   };
 
-  async function registerToken({ accessToken }, { googleId }) {
-    return fetch(`${herokuSocketRoute}api/users/${googleId}/refreshToken`, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        token: accessToken,
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        setGoogleId(data.googleId);
-        setToken(data.token);
-        return data;
-      });
+  async function refreshToken(googleId, accessToken) {
+    const response = await fetch(
+      `${herokuSocketRoute}api/users/${googleId}/refreshToken`,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: accessToken,
+        }),
+      }
+    );
+    const data = await response.json();
+    setGoogleId(data.googleId);
+    setToken(data.token);
   }
 
-  const navigateToLobby = data => {
+  const navigateToLobby = () => {
     navigation.navigate("Lobby");
   };
 
-  const getGameInfo = ({ id, name }) => {
-    return fetch(`${herokuSocketRoute}api/users`, {
+  const getGameInfo = async (googleId, name) => {
+    await fetch(`${herokuSocketRoute}api/users`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        googleId: id,
+        googleId: googleId,
         name: name,
         createdDate: new Date(),
       }),
-    })
-      .then(response => response.json())
-      .then(data => data);
+    });
   };
 
-  const getOnlineInfo = ({ googleId, name, token }) => {
-    return fetch(`${herokuSocketRoute}api/onlineUsers`, {
+  const getOnlineInfo = async (googleId, name, token) => {
+    await fetch(`${herokuSocketRoute}api/onlineUsers`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -120,9 +110,7 @@ const LoginComponent = ({ navigation }) => {
         name: name,
         socketId: socket.id,
       }),
-    })
-      .then(response => response.json())
-      .then(data => data);
+    });
   };
 
   const renderModal = () => (

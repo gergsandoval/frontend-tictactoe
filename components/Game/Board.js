@@ -20,10 +20,10 @@ const Board = ({ token, navigation }) => {
     setMoves(roomData.moves);
   };
 
-  const matchEnded = async winner => {
+  const matchEnded = winner => {
     setWinner(winner);
     const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
-    await updateRanking(method);
+    updateRanking(method);
   };
 
   useEffect(() => {
