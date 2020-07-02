@@ -5,7 +5,9 @@ import { herokuSocketRoute } from "../../socketRoute";
 import { getToken } from "../Storage";
 const RankingComponent = () => {
   let [rankingInfo, setRankingInfo] = React.useState([]);
-  React.useEffect(() => getRanking(), []);
+  React.useEffect(() => {
+    getRanking();
+  }, []);
 
   const getRanking = async () => {
     const token = await getToken();

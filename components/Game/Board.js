@@ -23,7 +23,7 @@ const Board = ({ token, navigation }) => {
   const matchEnded = async winner => {
     setWinner(winner);
     const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
-    await updateRanking(googleId, token, method);
+    await updateRanking(method);
   };
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const Board = ({ token, navigation }) => {
     };
   }, []);
 
-  const updateRanking = method => {
+  const updateRanking = async method => {
     const googleId = await getGoogleId();
     const token = await getToken();
     fetch(`${herokuSocketRoute}api/users/${googleId}/update${method}`, {

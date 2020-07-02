@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import { DataTable, Button } from "react-native-paper";
+import { DataTable } from "react-native-paper";
 import { herokuSocketRoute } from "../../socketRoute";
 import { getToken } from "../Storage";
 
