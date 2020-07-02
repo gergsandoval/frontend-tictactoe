@@ -4,8 +4,9 @@ import Square from "./Square";
 import GameOverPopUp from "./GameOverPopUp";
 import SocketContext from "../../socket-context";
 import { herokuSocketRoute } from "../../socketRoute";
+import { getGoogleId, getToken } from "../Storage";
 
-const Board = ({ token, navigation, gameInfo }) => {
+const Board = ({ token, navigation }) => {
   const socket = React.useContext(SocketContext);
   const [boardSquares, setBoardSquares] = useState(Array(9).fill(null));
   const [nextToMove, setNextToMove] = useState("X");
@@ -22,7 +23,7 @@ const Board = ({ token, navigation, gameInfo }) => {
   const matchEnded = async winner => {
     setWinner(winner);
     const method = !winner ? "Ties" : winner === playToken ? "Wins" : "Losses";
-    gameInfo = await updateRanking(gameInfo, method);
+    await updateRanking(method);
   };
 
   useEffect(() => {
@@ -35,15 +36,16 @@ const Board = ({ token, navigation, gameInfo }) => {
     };
   }, []);
 
-  const updateRanking = ({ googleId, token }, method) => {
-    return fetch(`${herokuSocketRoute}api/users/${googleId}/update${method}`, {
+  const updateRanking = async method => {
+    const googleId = await getGoogleId();
+    const token = await getToken();
+    fetch(`${herokuSocketRoute}api/users/${googleId}/update${method}`, {
       method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(gameInfo),
     })
       .then(response => response.json())
       .then(data => data);
@@ -71,7 +73,7 @@ const Board = ({ token, navigation, gameInfo }) => {
   };
 
   const navigateToLobby = () => {
-    navigation.navigate("Lobby", { gameInfo: gameInfo });
+    navigation.navigate("Lobby");
   };
 
   const renderModal = () => {

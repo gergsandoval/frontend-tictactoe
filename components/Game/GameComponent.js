@@ -19,11 +19,7 @@ const GameComponent = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Board
-        token={route.params.playToken}
-        navigation={navigation}
-        gameInfo={route.params.gameInfo}
-      />
+      <Board token={route.params.playToken} navigation={navigation} />
     </View>
   );
 };

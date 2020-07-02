@@ -1,5 +1,5 @@
-import { AsyncStorage } from "react-native";
 import * as AppAuth from "expo-app-auth";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const config = {
   issuer: "https://accounts.google.com",

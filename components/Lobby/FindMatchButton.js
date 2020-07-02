@@ -3,7 +3,7 @@ import { TouchableHighlight, View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import SocketContext from "../../socket-context";
 
-const FindMatchButton = ({ navigation, gameInfo }) => {
+const FindMatchButton = ({ navigation }) => {
   const [searching, setSearching] = useState(false);
 
   const socket = React.useContext(SocketContext);
@@ -14,16 +14,12 @@ const FindMatchButton = ({ navigation, gameInfo }) => {
       socket.emit("cancelSearch");
     } else {
       setSearching(true);
-      socket.emit("findMatch", {
-        googleId: gameInfo.googleId,
-        name: gameInfo.name,
-      });
+      socket.emit("findMatch");
       socket.emit("newQueueUser");
       socket.on("matchFound", playToken => {
         setSearching(false);
         navigation.navigate("Game", {
           playToken: playToken,
-          gameInfo: gameInfo,
         });
       });
     }

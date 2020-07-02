@@ -20,22 +20,16 @@ const LobbyComponent = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.table}>
-        <FirstRank navigation={navigation} gameInfo={route.params.gameInfo} />
+        <FirstRank navigation={navigation} />
       </View>
       <View style={styles.button}>
-        <RankingButton
-          navigation={navigation}
-          gameInfo={route.params.gameInfo}
-        />
+        <RankingButton navigation={navigation} />
       </View>
       <View style={styles.players}>
-        <Players navigation={navigation} gameInfo={route.params.gameInfo} />
+        <Players navigation={navigation} />
       </View>
       <View style={styles.button}>
-        <FindMatchButton
-          gameInfo={route.params.gameInfo}
-          navigation={navigation}
-        />
+        <FindMatchButton navigation={navigation} />
       </View>
     </View>
   );

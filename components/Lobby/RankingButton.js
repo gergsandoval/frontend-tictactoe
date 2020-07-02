@@ -2,15 +2,13 @@ import React from "react";
 import { TouchableHighlight, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 
-const RankingButton = ({ navigation, gameInfo }) => (
-  <TouchableHighlight
-    onPress={() => navigation.navigate("Ranking", { gameInfo: gameInfo })}
-  >
+const RankingButton = ({ navigation }) => (
+  <TouchableHighlight onPress={() => navigation.navigate("Ranking")}>
     <Button
       icon="trophy"
       mode="contained"
       style={{ alignItems: "center" }}
-      onPress={() => navigation.navigate("Ranking", { gameInfo: gameInfo })}
+      onPress={() => navigation.navigate("Ranking")}
       contentStyle={styles.button}
       labelStyle={styles.text}
     >
