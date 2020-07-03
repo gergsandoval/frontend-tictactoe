@@ -51,12 +51,30 @@ const LoginComponent = ({ navigation }) => {
       await getGameInfo(id, name);
       await refreshToken(id, accessToken);
       await getOnlineInfo(id, name, accessToken);
+      await refreshSocketId(id, accessToken);
       socket.emit("newUserOnline");
       navigateToLobby();
     } catch (err) {
       console.log(err.message);
     }
   };
+
+  async function refreshSocketId(googleId, accessToken) {
+    await fetch(
+      `${herokuSocketRoute}api/onlineUsers/${googleId}/refreshSocketId`,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          socketId: socket.id,
+        }),
+      }
+    );
+  }
 
   async function refreshToken(googleId, accessToken) {
     const response = await fetch(
