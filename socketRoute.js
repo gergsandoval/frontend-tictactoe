@@ -1,2 +1,2 @@
-const herokuSocketRoute = "https://nt2-tictactoe-develop.herokuapp.com/";
+const herokuSocketRoute = "https://nt2-tictactoe-qa.herokuapp.com/";
 export { herokuSocketRoute };
