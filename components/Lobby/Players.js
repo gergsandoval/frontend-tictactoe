@@ -1,59 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, FlatList, View } from "react-native";
 import { List } from "react-native-paper";
-import { herokuSocketRoute } from "../../socketRoute";
 import SocketContext from "../../socket-context";
-import { getToken } from "../Storage";
 
-const Players = ({ navigation }) => {
+const Players = ({ onlineUsers, queueUsers }) => {
   const socket = React.useContext(SocketContext);
-
-  let [onlineUsers, setOnlineUsers] = useState([]);
-  let [queueUsers, setQueueUsers] = useState([]);
-
-  useEffect(() => {
-    socket.on("updateOnlineUsers", data => {
-      setOnlineUsers(data);
-    });
-    socket.on("updateQueueUsers", data => {
-      setQueueUsers(data);
-    });
-
-    return () => {
-      socket.off("updateOnlineUsers");
-      socket.off("updateQueueUsers");
-    };
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getOnlineUsers();
-      getQueueUsers();
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  const getOnlineUsers = async () => {
-    const token = await getToken();
-    const response = await fetch(`${herokuSocketRoute}api/onlineUsers`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    setOnlineUsers(data);
-  };
-
-  const getQueueUsers = async () => {
-    const token = await getToken();
-    const response = await fetch(`${herokuSocketRoute}api/queueUsers`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    setQueueUsers(data);
-  };
 
   return (
     <View style={styles.container}>

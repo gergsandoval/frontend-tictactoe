@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 const googleId = "googleId";
 const token = "token";
+const name = "name";
 
 export async function getGoogleId() {
   let value = null;
@@ -34,6 +35,24 @@ export async function getToken() {
 export async function setToken(value) {
   try {
     await AsyncStorage.setItem(token, value);
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+export async function getName() {
+  let value = null;
+  try {
+    value = await AsyncStorage.getItem(name);
+  } catch (err) {
+    console.log(err.message);
+  }
+  return value;
+}
+
+export async function setName(value) {
+  try {
+    await AsyncStorage.setItem(name, value);
   } catch (err) {
     console.log(err.message);
   }

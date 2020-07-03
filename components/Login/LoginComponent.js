@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LoginButton from "./LoginButton";
 import ExitButton from "./ExitButton";
 import { signInAsync, getCachedAuthAsync, getGoogleInfo } from "./AppAuth";
-import { setGoogleId, setToken } from "../Storage";
+import { setGoogleId, setToken, setName } from "../Storage";
 import { herokuSocketRoute } from "../../socketRoute";
 import SocketContext from "../../socket-context";
 import HerokuDown from "./HerokuDown";
@@ -93,6 +93,7 @@ const LoginComponent = ({ navigation }) => {
     const data = await response.json();
     setGoogleId(data.googleId);
     setToken(data.token);
+    setName(data.name);
   }
 
   const navigateToLobby = () => {
@@ -125,7 +126,6 @@ const LoginComponent = ({ navigation }) => {
       body: JSON.stringify({
         googleId: googleId,
         name: name,
-        socketId: socket.id,
       }),
     });
   };

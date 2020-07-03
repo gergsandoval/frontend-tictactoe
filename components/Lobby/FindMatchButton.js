@@ -3,28 +3,7 @@ import { TouchableHighlight, View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import SocketContext from "../../socket-context";
 
-const FindMatchButton = ({ navigation }) => {
-  const [searching, setSearching] = useState(false);
-
-  const socket = React.useContext(SocketContext);
-
-  const findMatch = () => {
-    if (searching) {
-      setSearching(false);
-      socket.emit("cancelSearch");
-    } else {
-      setSearching(true);
-      socket.emit("findMatch");
-      socket.emit("newQueueUser");
-      socket.on("matchFound", playToken => {
-        setSearching(false);
-        navigation.navigate("Game", {
-          playToken: playToken,
-        });
-      });
-    }
-  };
-
+const FindMatchButton = ({ findMatch, searching, reconnecting }) => {
   return (
     <TouchableHighlight onPress={() => findMatch()}>
       <Button
@@ -33,6 +12,8 @@ const FindMatchButton = ({ navigation }) => {
         onPress={() => findMatch()}
         contentStyle={styles.button}
         labelStyle={styles.text}
+        disabled={reconnecting}
+        loading={reconnecting}
       >
         {searching ? "Cancelar Busqueda" : "Buscar Partida"}
       </Button>

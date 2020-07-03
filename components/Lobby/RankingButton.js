@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableHighlight, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 
-const RankingButton = ({ navigation }) => (
+const RankingButton = ({ navigation, reconnecting }) => (
   <TouchableHighlight onPress={() => navigation.navigate("Ranking")}>
     <Button
       icon="trophy"
@@ -11,6 +11,8 @@ const RankingButton = ({ navigation }) => (
       onPress={() => navigation.navigate("Ranking")}
       contentStyle={styles.button}
       labelStyle={styles.text}
+      disabled={reconnecting}
+      loading={reconnecting}
     >
       Ranking
     </Button>
