@@ -26,9 +26,10 @@ const LoginComponent = ({ navigation }) => {
 
   const googleCacheConnect = async () => {
     setGettingInfo(true);
-    setHerokuStatus(await getHerokuStatus());
+    const status = await getHerokuStatus();
+    setHerokuStatus(status);
     let cachedAuth = await getCachedAuthAsync();
-    if (herokuStatus && cachedAuth) {
+    if (status && cachedAuth) {
       await getInfoAndNavigateToLobby(cachedAuth);
     }
     setGettingInfo(false);
@@ -36,8 +37,9 @@ const LoginComponent = ({ navigation }) => {
 
   const googleConnect = async () => {
     setGettingInfo(true);
-    setHerokuStatus(await getHerokuStatus());
-    if (herokuStatus) {
+    const status = await getHerokuStatus();
+    setHerokuStatus(status);
+    if (status) {
       const authState = await signInAsync();
       await getInfoAndNavigateToLobby(authState);
     }

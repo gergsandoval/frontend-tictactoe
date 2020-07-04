@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, BackHandler } from "react-native";
+import { View, StyleSheet, BackHandler } from "react-native";
 import { Button } from "react-native-paper";
 
 const ExitButton = props => (

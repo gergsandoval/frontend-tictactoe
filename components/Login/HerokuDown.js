@@ -17,7 +17,7 @@ const HerokuDown = ({ herokuStatus, googleCacheConnect, gettingInfo }) => {
               {`El mejor juego anticuarentena no esta disponible.\n Regresa mas tarde`}
             </Text>
             <Button
-              icon={gettingInfo ? "refresh" : null}
+              loading={gettingInfo}
               mode="contained"
               disabled={gettingInfo}
               onPress={() => googleCacheConnect()}

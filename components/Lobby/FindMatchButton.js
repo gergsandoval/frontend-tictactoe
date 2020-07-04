@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { TouchableHighlight, View, StyleSheet } from "react-native";
+import React from "react";
+import { TouchableHighlight, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
-import SocketContext from "../../socket-context";
 
 const FindMatchButton = ({ findMatch, searching, reconnecting }) => {
   return (
