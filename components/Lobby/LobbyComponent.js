@@ -6,8 +6,12 @@ import Players from "./Players";
 import { useFocusEffect } from "@react-navigation/native";
 import RankingButton from "./RankingButton";
 import SocketContext from "../../socket-context";
-import { getGoogleId, getToken, getName } from "../Storage";
-import { herokuSocketRoute } from "../../socketRoute";
+import {
+  insertOnlineUser,
+  refreshSocketId,
+  getOnlineUsers,
+} from "../../Services/onlineUsers";
+import { getQueueUsers } from "../../Services/queueUsers";
 
 const LobbyComponent = ({ navigation }) => {
   const socket = React.useContext(SocketContext);
@@ -24,17 +28,39 @@ const LobbyComponent = ({ navigation }) => {
     socket.on("updateQueueUsers", data => {
       setQueueUsers(data);
     });
+    socket.on("disconnect", () => {
+      handleDisconnection();
+    });
+    socket.on("reconnect", async () => {
+      await handleReconnection();
+    });
 
     return () => {
       socket.off("updateOnlineUsers");
       socket.off("updateQueueUsers");
+      socket.off("disconnect");
+      socket.off("reconnect");
     };
   }, []);
 
+  const handleDisconnection = () => {
+    setSearching(false);
+    setReconnecting(true);
+  };
+
+  const handleReconnection = async () => {
+    socket.off("reconnect");
+    await insertOnlineUser();
+    await refreshSocketId(socket.id);
+    socket.emit("newOnlineUser");
+    setQueueUsers(await getQueueUsers());
+    setReconnecting(false);
+  };
+
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getOnlineUsers();
-      getQueueUsers();
+    const unsubscribe = navigation.addListener("focus", async () => {
+      setOnlineUsers(await getOnlineUsers());
+      setQueueUsers(await getQueueUsers());
     });
     return unsubscribe;
   }, [navigation]);
@@ -48,83 +74,6 @@ const LobbyComponent = ({ navigation }) => {
         BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [])
   );
-
-  useEffect(() => {
-    socket.on("disconnect", reason => {
-      setSearching(false);
-      setReconnecting(true);
-      socket.on("reconnect", async attemptNumber => {
-        //Aca hay que desactivar el modal
-        const googleId = await getGoogleId();
-        const name = await getName();
-        const token = await getToken();
-        await getOnlineInfo(googleId, name, token);
-        await refreshSocketId(googleId, socket.id, token);
-        getOnlineUsers();
-        getQueueUsers();
-        setReconnecting(false);
-      });
-    });
-
-    return () => {
-      socket.off("disconnect");
-      socket.off("reconnect");
-    };
-  }, []);
-
-  const getOnlineUsers = async () => {
-    const token = await getToken();
-    const response = await fetch(`${herokuSocketRoute}api/onlineUsers`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    setOnlineUsers(data);
-  };
-
-  const getQueueUsers = async () => {
-    const token = await getToken();
-    const response = await fetch(`${herokuSocketRoute}api/queueUsers`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    setQueueUsers(data);
-  };
-
-  const getOnlineInfo = async (googleId, name, token) => {
-    await fetch(`${herokuSocketRoute}api/onlineUsers`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        googleId: googleId,
-        name: name,
-      }),
-    });
-  };
-
-  async function refreshSocketId(googleId, socketId, token) {
-    await fetch(
-      `${herokuSocketRoute}api/onlineUsers/${googleId}/refreshSocketId`,
-      {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          socketId: socketId,
-        }),
-      }
-    );
-  }
 
   const findMatch = () => {
     if (searching) {

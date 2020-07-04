@@ -3,8 +3,7 @@ import { View, StyleSheet, Text } from "react-native";
 import Square from "./Square";
 import GameOverPopUp from "./GameOverPopUp";
 import SocketContext from "../../socket-context";
-import { herokuSocketRoute } from "../../socketRoute";
-import { getGoogleId, getToken } from "../Storage";
+import { updateRanking } from "../../Services/ranking";
 
 const Board = ({ token, navigation }) => {
   const socket = React.useContext(SocketContext);
@@ -35,19 +34,6 @@ const Board = ({ token, navigation }) => {
       socket.off("matchEnded");
     };
   }, []);
-
-  const updateRanking = async method => {
-    const googleId = await getGoogleId();
-    const token = await getToken();
-    fetch(`${herokuSocketRoute}api/users/${googleId}/update${method}`, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  };
 
   const handleClick = index => {
     if (!boardSquares[index] && nextToMove === playToken && !winner) {

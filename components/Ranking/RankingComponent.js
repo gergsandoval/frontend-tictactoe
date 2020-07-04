@@ -1,24 +1,16 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, FlatList } from "react-native";
 import { DataTable } from "react-native-paper";
-import { herokuSocketRoute } from "../../socketRoute";
-import { getToken } from "../Storage";
+import { getRanking } from "../../Services/ranking";
 const RankingComponent = () => {
   let [rankingInfo, setRankingInfo] = React.useState([]);
-  React.useEffect(() => {
-    getRanking();
-  }, []);
 
-  const getRanking = async () => {
-    const token = await getToken();
-    const response = await fetch(`${herokuSocketRoute}api/ranking`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    setRankingInfo(data);
-  };
+  useEffect(() => {
+    const fetchRanking = async () => {
+      setRankingInfo(await getRanking());
+    };
+    fetchRanking();
+  }, []);
 
   return (
     <DataTable style={styles.tableContainer}>

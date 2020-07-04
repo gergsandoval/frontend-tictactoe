@@ -2,13 +2,13 @@ import React from "react";
 import { Modal, StyleSheet, Text, View, BackHandler } from "react-native";
 import { Button } from "react-native-paper";
 
-const HerokuDown = ({ herokuUp, googleCacheConnect, gettingInfo }) => {
+const HerokuDown = ({ herokuStatus, googleCacheConnect, gettingInfo }) => {
   return (
     <View style={styles.centeredView}>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={!herokuUp}
+        visible={!herokuStatus}
         onRequestClose={() => BackHandler.exitApp()}
       >
         <View style={styles.centeredView}>
