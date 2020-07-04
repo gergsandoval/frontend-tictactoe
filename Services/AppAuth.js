@@ -49,11 +49,10 @@ const refreshAuthAsync = async ({ refreshToken }) => {
   return authState;
 };
 
-// prettier-ignore
 export async function getGoogleInfo(accessToken) {
-  const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+  const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
     headers: { Authorization: `Bearer ${accessToken}` },
-  })
+  });
   const data = await response.json();
   return data;
 }

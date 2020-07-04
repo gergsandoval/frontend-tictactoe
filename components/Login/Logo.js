@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
 
-const Logo = ({ herokuUp }) => {
-  if (herokuUp) {
+const Logo = ({ herokuStatus }) => {
+  if (herokuStatus) {
     return (
       <View style={styles.container}>
         <Image style={styles.image} source={require("../../assets/icon.png")} />

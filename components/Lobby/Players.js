@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StyleSheet, FlatList, View } from "react-native";
 import { List } from "react-native-paper";
-import SocketContext from "../../socket-context";
 
 const Players = ({ onlineUsers, queueUsers }) => {
-  const socket = React.useContext(SocketContext);
-
   return (
     <View style={styles.container}>
       <View style={styles.online}>

@@ -1,29 +1,17 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { DataTable } from "react-native-paper";
-import { herokuSocketRoute } from "../../socketRoute";
-import { getToken } from "../Storage";
+import { getRankOne } from "../../Services/ranking";
 
 const FirstRank = ({ navigation }) => {
   let [firstRankInfo, setFirstRankInfo] = React.useState([]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getRankOne();
+    const unsubscribe = navigation.addListener("focus", async () => {
+      setFirstRankInfo(await getRankOne());
     });
     return unsubscribe;
   }, [navigation]);
-
-  const getRankOne = async () => {
-    const token = await getToken();
-    const response = await fetch(`${herokuSocketRoute}api/ranking/getRankOne`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    setFirstRankInfo(data);
-  };
 
   return (
     <>
