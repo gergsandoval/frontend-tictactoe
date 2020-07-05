@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { View, StyleSheet, BackHandler, ToastAndroid } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import Board from "./Board";

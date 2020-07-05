@@ -4,6 +4,8 @@ import Square from "./Square";
 import GameOverPopUp from "./GameOverPopUp";
 import SocketContext from "../../socket-context";
 import { updateRanking } from "../../Services/ranking";
+import { insertOnlineUser, refreshSocketId } from "../../Services/onlineUsers";
+import Loading from "../Login/Loading";
 
 const Board = ({ token, navigation }) => {
   const socket = React.useContext(SocketContext);
@@ -12,6 +14,7 @@ const Board = ({ token, navigation }) => {
   const [moves, setMoves] = useState(0);
   const [winner, setWinner] = useState(null);
   const [playToken, setPlayToken] = useState(token);
+  const [reconnecting, setReconnecting] = useState(false);
 
   const boardUpdate = roomData => {
     setBoardSquares(roomData.boardState);
@@ -25,13 +28,36 @@ const Board = ({ token, navigation }) => {
     updateRanking(method);
   };
 
+  const handleDisconnection = () => {
+    setReconnecting(true);
+  };
+
+  const handleReconnection = async () => {
+    socket.off("reconnect");
+    const winner = playToken === "X" ? "O" : "X";
+    setWinner(winner);
+    setReconnecting(false);
+    await updateRanking("Losses");
+    await insertOnlineUser();
+    await refreshSocketId(socket.id);
+    socket.emit("newOnlineUser");
+  };
+
   useEffect(() => {
     socket.on("boardUpdate", roomData => boardUpdate(roomData));
     socket.on("matchEnded", winner => matchEnded(winner));
+    socket.on("disconnect", () => {
+      handleDisconnection();
+    });
+    socket.on("reconnect", async () => {
+      await handleReconnection();
+    });
 
     return () => {
       socket.off("boardUpdate");
       socket.off("matchEnded");
+      socket.off("disconnect");
+      socket.off("reconnect");
     };
   }, []);
 
@@ -49,7 +75,7 @@ const Board = ({ token, navigation }) => {
   const renderSquare = index => {
     return (
       <Square
-        disabled={moves === 9 || winner != null}
+        disabled={moves === 9 || winner != null || reconnecting}
         value={boardSquares[index]}
         onPress={() => handleClick(index)}
       />
@@ -68,6 +94,8 @@ const Board = ({ token, navigation }) => {
       ></GameOverPopUp>
     );
   };
+
+  const renderSpinner = () => <Loading gettingInfo={reconnecting} />;
 
   const updateNextToMoveText = winner =>
     winner
@@ -103,7 +131,9 @@ const Board = ({ token, navigation }) => {
         {renderSquare(7)}
         {renderSquare(8)}
       </View>
-      <View style={styles.topBottomContainer}></View>
+      <View style={styles.topBottomContainer}>
+        <View>{renderSpinner()}</View>
+      </View>
     </View>
   );
 };
