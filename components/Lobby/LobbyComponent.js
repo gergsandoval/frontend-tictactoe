@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, BackHandler } from "react-native";
+import { View, StyleSheet, BackHandler, ToastAndroid } from "react-native";
 import FirstRank from "./firstRank";
 import FindMatchButton from "./FindMatchButton";
 import Players from "./Players";
@@ -75,20 +75,33 @@ const LobbyComponent = ({ navigation }) => {
     }, [])
   );
 
+  const cancelSearch = () => {
+    setSearching(false);
+    socket.emit("cancelSearch");
+  };
+
+  const navigateToGame = playToken => {
+    setSearching(false);
+    navigation.navigate("Game", { playToken: playToken });
+  };
+
+  const errorAtQueue = () => {
+    setSearching(false);
+    ToastAndroid.show(
+      `Ocurrio un error al buscar partida. Reinicia la aplicacion porfavor.`,
+      ToastAndroid.SHORT
+    );
+  };
+
   const findMatch = () => {
     if (searching) {
-      setSearching(false);
-      socket.emit("cancelSearch");
+      cancelSearch();
     } else {
       setSearching(true);
       socket.emit("findMatch");
+      socket.on("errorAtQueue", () => errorAtQueue());
       socket.emit("newQueueUser");
-      socket.on("matchFound", playToken => {
-        setSearching(false);
-        navigation.navigate("Game", {
-          playToken: playToken,
-        });
-      });
+      socket.on("matchFound", playToken => navigateToGame(playToken));
     }
   };
 
