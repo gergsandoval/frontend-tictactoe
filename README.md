@@ -1,7 +1,7 @@
 # TicTacToe - El mejor juego anticuarentena
-Hola! Este fue un proyecto para la carrera Analista de Sistemas en ORT Argentina.
+Hola! Este fue un proyecto del 3er cuatrimestre para la carrera Analista de Sistemas en ORT Argentina.
 
-## La Materia de Backend se enfocaba en aprender
+## La Materia de Backend(Taller de Programacion 2) se enfocaba en aprender
 - ES6
 - Node.js
 - npm
@@ -9,7 +9,7 @@ Hola! Este fue un proyecto para la carrera Analista de Sistemas en ORT Argentina
 - Programacion asincrónica
 - Restful API
 
-## La Materia de Frontend se enfocaba en aprender
+## La Materia de Frontend(Programacion en Nuevas Tecnologias 2) se enfocaba en aprender
 - ES6
 - Programacion orientada a componentes
 - React
