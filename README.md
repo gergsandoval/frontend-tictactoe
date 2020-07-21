@@ -30,5 +30,5 @@ Hola! Este fue un proyecto del 3er cuatrimestre para la carrera Analista de Sist
 - [Link al repositorio](https://github.com/gergsandoval/frontend-tictactoe)
 - La ultima version entregada se encuentra en la branch [**develop**](https://github.com/gergsandoval/frontend-tictactoe)
 - Utilizamos [Expo](https://expo.io/) como base del proyecto y para realizar un scaffolding inicial
-- Realizamos una [autorizacion](https://docs.expo.io/versions/latest/sdk/app-auth/) con google que nos devolvia un token y lo guardabamos en el usuario 
+- Integramos la [autorizacion](https://docs.expo.io/versions/latest/sdk/app-auth/) con google que nos devolvia un token y lo guardabamos en el usuario 
 - Utilizabamos ese token para realizar las llamadas a las API
