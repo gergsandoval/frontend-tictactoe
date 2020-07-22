@@ -23,7 +23,7 @@ Hola! Este fue un proyecto del 3er cuatrimestre para la carrera Analista de Sist
 - Utilizamos [socket.io](https://www.npmjs.com/package/socket.io) para implementar la comunicacion en tiempo real
 - Utilizamos [mongodb](https://www.npmjs.com/package/mongodb) para la persistir los datos
 - Utilizamos [Heroku](https://www.heroku.com/) para subir el servidor a la nube
-- Utilizamos el token persistido en cada usuario como capa de seguridad en la mayoria de los endpoints.
+- Utilizamos el token persistido en cada usuario como capa de seguridad en la mayoria de los endpoints
 
 
 ### Frontend
@@ -32,3 +32,4 @@ Hola! Este fue un proyecto del 3er cuatrimestre para la carrera Analista de Sist
 - Utilizamos [Expo](https://expo.io/) como base del proyecto y para realizar un scaffolding inicial
 - Integramos la [autorizacion](https://docs.expo.io/versions/latest/sdk/app-auth/) con google que nos devolvia un token y lo guardabamos en el usuario 
 - Utilizabamos ese token para realizar las llamadas a las API
+- Utilizamos [socket.io-client](https://www.npmjs.com/package/socket.io-client) para comunicarnos con el backend
